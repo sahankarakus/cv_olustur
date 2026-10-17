@@ -123,72 +123,79 @@ html, body {
     font-weight: 500;
 }
 
-/* Header Orta Kontroller (Şablon & Stil Seçimi) */
+/* Header Orta Kontroller (Sadeleştirilmiş Butonlar) */
 .header-controls {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
 }
 
-.control-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.header-pill-btn {
     background: rgba(15, 23, 42, 0.6);
-    padding: 4px 8px;
-    border-radius: 10px;
     border: 1px solid var(--border-subtle);
-}
-
-.control-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding-left: 4px;
-}
-
-/* Şablon Seçici Butonları */
-.template-selector {
-    display: flex;
-    gap: 4px;
-}
-
-.template-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.8rem;
+    color: var(--text-primary);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.82rem;
     font-weight: 600;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     transition: all var(--transition-fast);
 }
 
-.template-btn:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
+.header-pill-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
 }
 
-.template-btn.active {
-    background: var(--accent-blue);
+.header-pill-btn.primary-pill {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: #93c5fd;
+}
+
+.header-pill-btn.primary-pill:hover {
+    background: rgba(59, 130, 246, 0.25);
+    border-color: var(--accent-blue);
     color: #ffffff;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+.header-pill-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Header Sağ Eylemler */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group-mini {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
 }
 
 /* Renk Seçici Hapları */
 .color-picker {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     align-items: center;
-    padding: 0 4px;
+    padding: 0 2px;
 }
 
 .color-dot {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid transparent;
@@ -201,32 +208,19 @@ html, body {
 
 .color-dot.active {
     border-color: #ffffff;
-    transform: scale(1.25);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    transform: scale(1.22);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
-/* Font Seçici Açılır Kutu */
-.font-select {
-    background: transparent;
-    border: none;
-    color: var(--text-primary);
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 4px 8px;
-    outline: none;
-    cursor: pointer;
-}
-
-.font-select option {
-    background: var(--bg-surface);
-    color: var(--text-primary);
-}
-
-/* Header Sağ Eylemler */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* ============================================================
+   Ana Çalışma Alanı (Form Paneli & Rahat Önizleme)
+   ============================================================ */
+.app-workspace {
+    display: grid;
+    grid-template-columns: 570px 1fr;
+    height: calc(100vh - 64px);
+    width: 100vw;
+    overflow: hidden;
 }
 
 .btn {
@@ -435,11 +429,132 @@ html, body {
     gap: 16px;
 }
 
-/* Sektör Seçici Grid */
-.sector-grid {
+/* Şablon Galerisi Grid & Minyatür Önizleme */
+.templates-gallery-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 16px;
+}
+
+.template-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.template-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
+}
+
+.template-card.active {
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.template-card.active::after {
+    content: "✓ Seçili";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--accent-blue);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+/* Şablon Minyatür Mockup Çizimleri */
+.template-mock-preview {
+    height: 120px;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* 1. Ivy League Minyatür */
+.mock-ivy .mock-name { height: 7px; width: 45%; background: #1a1a1a; border-radius: 2px; }
+.mock-ivy .mock-contacts { height: 3px; width: 85%; background: #94a3b8; border-radius: 1px; }
+.mock-ivy .mock-line { height: 1.5px; width: 100%; background: #1a1a1a; margin: 2px 0; }
+.mock-ivy .mock-sec-title { height: 4px; width: 25%; background: #1a1a1a; border-bottom: 0.5px solid #ccc; margin-top: 3px; }
+.mock-ivy .mock-row { display: flex; justify-content: space-between; margin-top: 2px; }
+.mock-ivy .mock-text-bold { height: 4px; width: 40%; background: #334155; }
+.mock-ivy .mock-text-date { height: 3px; width: 20%; background: #94a3b8; }
+.mock-ivy .mock-para { height: 3px; width: 90%; background: #cbd5e1; margin-top: 2px; }
+
+/* 2. Modern İki Sütun Minyatür */
+.mock-modern { display: grid !important; grid-template-columns: 32% 1fr; gap: 6px; padding: 0 !important; }
+.mock-modern .mock-sidebar { background: #f1f5f9; padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+.mock-modern .mock-avatar { width: 18px; height: 18px; border-radius: 50%; background: #cbd5e1; margin-bottom: 4px; }
+.mock-modern .mock-side-pill { height: 3px; width: 80%; background: #94a3b8; }
+.mock-modern .mock-main { padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+.mock-modern .mock-main-name { height: 7px; width: 60%; background: #0f172a; }
+.mock-modern .mock-main-sub { height: 4px; width: 40%; background: var(--accent-blue); }
+
+/* 3. Kurumsal ATS Minyatür */
+.mock-ats { text-align: center; }
+.mock-ats .mock-name-center { height: 6px; width: 50%; background: #000; margin: 0 auto; }
+.mock-ats .mock-cont-center { height: 3px; width: 75%; background: #64748b; margin: 3px auto; }
+.mock-ats .mock-sec-head { height: 4px; width: 30%; background: #000; border-bottom: 1px solid #000; margin-top: 5px; }
+
+/* 4. Minimalist Minyatür */
+.mock-minimal { display: flex; flex-direction: column; gap: 5px; }
+.mock-minimal .mock-head-split { display: flex; justify-content: space-between; border-bottom: 0.5px solid #e2e8f0; padding-bottom: 4px; }
+.mock-minimal .mock-rows-grid { display: grid; grid-template-columns: 25% 1fr; gap: 4px; }
+
+.template-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.template-card-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.template-badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.template-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+}
+
+.template-badge.highlight {
+    background: rgba(16, 185, 129, 0.15);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.template-desc {
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    line-height: 1.35;
 }
 
 .sector-card {

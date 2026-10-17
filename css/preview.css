@@ -119,7 +119,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 40px 20px 100px 20px;
+    padding: 24px 16px 80px 16px;
     cursor: grab;
 }
 
@@ -138,8 +138,8 @@
     min-height: 297mm;
     background-color: #ffffff;
     color: #1e293b;
-    box-shadow: var(--shadow-paper);
-    border-radius: 2px;
+    box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
     position: relative;
     overflow: hidden;
     font-family: var(--cv-font);

@@ -342,6 +342,26 @@
     color: var(--text-muted);
 }
 
+.photo-disabled-notice {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.4;
+}
+
+.photo-disabled-notice svg {
+    flex-shrink: 0;
+    color: #60a5fa;
+    width: 16px;
+    height: 16px;
+}
+
 .file-input-hidden {
     display: none;
 }

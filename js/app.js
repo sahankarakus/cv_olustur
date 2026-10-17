@@ -10,8 +10,8 @@ const appState = {
         template: 'ivy', // Şahan Karakuş & Ivy League ATS şablonu varsayılan
         primaryColor: '#0f172a',
         fontFamily: 'font-inter',
-        zoom: 0.85,
-        compactness: 'normal', // 'tight' | 'normal' | 'loose'
+        zoom: 0.70, // Rahat ve kompakt varsayılan boyut
+        compactness: 'normal',
         isAutoFit: true
     }
 };
@@ -27,14 +27,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initApp() {
     loadSavedData();
-    checkUrlSharedData(); // URL üzerinden paylaşılan CV kontrolü
+    checkUrlSharedData();
     setupEventListeners();
     populateFormFromData();
     applySettings();
+    updateFormVisibilityForTemplate();
     renderPreview();
     updateCompleteness();
     updateAtsScore();
     autoFitPreview();
+}
+
+/**
+ * Şablona göre geçerli olmayan özellikleri formda gizler (Örn: ATS'de fotoğrafı gizleme)
+ */
+function updateFormVisibilityForTemplate() {
+    const tpl = appState.settings.template;
+    const photoUploader = document.getElementById('photoUploaderWrapper');
+    const photoNotice = document.getElementById('photoDisabledNotice');
+    const colorGroup = document.getElementById('headerColorPickerGroup');
+
+    // Yalnızca 'modern' şablon fotoğraf destekler; Ivy ATS ve Kurumsal ATS metin odaklıdır
+    const supportsPhoto = (tpl === 'modern');
+
+    if (photoUploader) {
+        photoUploader.style.display = supportsPhoto ? 'flex' : 'none';
+    }
+    if (photoNotice) {
+        photoNotice.style.display = supportsPhoto ? 'none' : 'flex';
+    }
+
+    // Ivy League klasik ATS siyah-beyaz resmi standarttadır
+    if (colorGroup) {
+        if (tpl === 'ivy') {
+            colorGroup.style.opacity = '0.4';
+            colorGroup.style.pointerEvents = 'none';
+            colorGroup.title = 'Klasik ATS resmi siyah-beyaz formatındadır.';
+        } else {
+            colorGroup.style.opacity = '1';
+            colorGroup.style.pointerEvents = 'auto';
+            colorGroup.title = 'Vurgu Rengi';
+        }
+    }
+
+    // Modal içindeki aktif şablon kartını vurgula
+    document.querySelectorAll('.template-card').forEach(card => {
+        if (card.dataset.template === tpl) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+    });
+
+    // Header şablon butonunun metnini güncelle
+    const tplLabel = document.getElementById('currentTemplateLabel');
+    if (tplLabel) {
+        const names = {
+            'ivy': 'Klasik ATS (Ivy)',
+            'ats': 'Kurumsal ATS',
+            'modern': 'Modern',
+            'minimal': 'Minimalist'
+        };
+        tplLabel.textContent = names[tpl] || 'Şablonlar';
+    }
 }
 
 /**
@@ -996,18 +1051,43 @@ window.copyShareUrl = function() {
 };
 
 // ==========================================
+// Şablon Galerisi Modalı (Görsel Seçim)
+// ==========================================
+window.openTemplateModal = function() {
+    updateFormVisibilityForTemplate();
+    const modal = document.getElementById('templateModal');
+    if (modal) modal.classList.add('active');
+};
+
+window.selectTemplateFromModal = function(templateId) {
+    appState.settings.template = templateId;
+    updateFormVisibilityForTemplate();
+    renderPreview();
+    saveData();
+    closeModal('templateModal');
+
+    const names = {
+        'ivy': 'Klasik ATS (Ivy League)',
+        'ats': 'Kurumsal ATS',
+        'modern': 'Modern (İki Sütunlu)',
+        'minimal': 'Minimalist Editoryal'
+    };
+    showToast(`Şablon: ${names[templateId] || templateId}`, "success");
+};
+
+// ==========================================
 // Zoom Kontrolleri & Otomatik Sığdırma
 // ==========================================
 window.changeZoom = function(delta) {
     let newZoom = Math.round((appState.settings.zoom + delta) * 100) / 100;
-    newZoom = Math.min(Math.max(newZoom, 0.4), 1.5);
+    newZoom = Math.min(Math.max(newZoom, 0.4), 1.3);
     appState.settings.isAutoFit = false;
     applyZoom(newZoom);
 };
 
 window.resetZoom = function() {
     appState.settings.isAutoFit = false;
-    applyZoom(1.0);
+    applyZoom(0.70); // Rahat varsayılan
 };
 
 window.autoFitPreview = function() {
@@ -1017,7 +1097,8 @@ window.autoFitPreview = function() {
     const a4PixelWidth = 794;
     
     if (availableWidth > 0) {
-        let fitScale = Math.min(Math.max(availableWidth / a4PixelWidth, 0.45), 1.1);
+        // Önizlemenin ekranı çok boğmaması için maksimum 0.72 ölçek sınırı
+        let fitScale = Math.min(Math.max(availableWidth / a4PixelWidth, 0.45), 0.72);
         fitScale = Math.round(fitScale * 100) / 100;
         appState.settings.isAutoFit = true;
         applyZoom(fitScale);
