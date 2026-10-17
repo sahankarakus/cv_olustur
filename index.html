@@ -71,16 +71,72 @@
             </button>
         </div>
 
-        <!-- Sağ: Eylem Butonları (Renk, Yedekle, Paylaş, PDF) -->
+        <!-- Sağ: Eylem Butonları (Gelişmiş Renk Seçici, Yedekle, Paylaş, PDF) -->
         <div class="header-actions">
-            <!-- Renk Paleti (Şablona göre aktif/pasif) -->
-            <div id="headerColorPickerGroup" class="control-group-mini" title="Vurgu Rengi">
-                <div class="color-picker">
-                    <span class="color-dot active" data-color="#0f172a" style="background-color: #0f172a;" title="Kömür Siyahı (Klasik)"></span>
-                    <span class="color-dot" data-color="#2563eb" style="background-color: #2563eb;" title="Safir Mavi"></span>
-                    <span class="color-dot" data-color="#4f46e5" style="background-color: #4f46e5;" title="İndigo"></span>
-                    <span class="color-dot" data-color="#059669" style="background-color: #059669;" title="Zümrüt Yeşili"></span>
-                    <span class="color-dot" data-color="#e11d48" style="background-color: #e11d48;" title="Gül / Bordo"></span>
+            <!-- Gelişmiş Vurgu Rengi Açılır Menüsü (Requirement 3) -->
+            <div id="headerColorPickerGroup" class="color-dropdown-wrap" title="CV Vurgu Rengi">
+                <button type="button" class="header-pill-btn" onclick="toggleColorDropdown(event)">
+                    <span class="color-indicator-preview" style="background-color: var(--cv-primary, #0f172a);"></span>
+                    <span>Renk ▾</span>
+                </button>
+                <div id="colorDropdownMenu" class="color-dropdown-menu" onclick="event.stopPropagation()">
+                    <div class="color-dropdown-header">
+                        <span>CV Vurgu Rengi</span>
+                        <span class="color-dropdown-sub">16 Kurumsal Ton & Özel Renk</span>
+                    </div>
+
+                    <!-- Kategori 1: Resmi & Kurumsal -->
+                    <div class="palette-category">
+                        <span class="palette-category-title">Resmi & Kurumsal</span>
+                        <div class="color-swatches-grid">
+                            <button type="button" class="color-swatch-btn active" data-color="#0f172a" style="background:#0f172a;" onclick="setPrimaryColor('#0f172a')" title="Kömür Siyahı"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#1e293b" style="background:#1e293b;" onclick="setPrimaryColor('#1e293b')" title="Koyu Arduvaz"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#1e3a8a" style="background:#1e3a8a;" onclick="setPrimaryColor('#1e3a8a')" title="Gece Mavisi"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#2563eb" style="background:#2563eb;" onclick="setPrimaryColor('#2563eb')" title="Safir Mavi"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#0284c7" style="background:#0284c7;" onclick="setPrimaryColor('#0284c7')" title="Okyanus"></button>
+                        </div>
+                    </div>
+
+                    <!-- Kategori 2: Prestij & Doğa -->
+                    <div class="palette-category">
+                        <span class="palette-category-title">Prestij & Doğa</span>
+                        <div class="color-swatches-grid">
+                            <button type="button" class="color-swatch-btn" data-color="#059669" style="background:#059669;" onclick="setPrimaryColor('#059669')" title="Zümrüt Yeşili"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#065f46" style="background:#065f46;" onclick="setPrimaryColor('#065f46')" title="Orman Yeşili"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#0d9488" style="background:#0d9488;" onclick="setPrimaryColor('#0d9488')" title="Teal / Zümrüt Mavisi"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#0f766e" style="background:#0f766e;" onclick="setPrimaryColor('#0f766e')" title="Koyu Çam"></button>
+                        </div>
+                    </div>
+
+                    <!-- Kategori 3: Zarif & İddialı -->
+                    <div class="palette-category">
+                        <span class="palette-category-title">Zarif & İddialı</span>
+                        <div class="color-swatches-grid">
+                            <button type="button" class="color-swatch-btn" data-color="#881337" style="background:#881337;" onclick="setPrimaryColor('#881337')" title="Mürdüm / Bordo"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#dc2626" style="background:#dc2626;" onclick="setPrimaryColor('#dc2626')" title="Yakut Kırmızı"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#e11d48" style="background:#e11d48;" onclick="setPrimaryColor('#e11d48')" title="Gül / Fuşya"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#be185d" style="background:#be185d;" onclick="setPrimaryColor('#be185d')" title="Ahududu"></button>
+                        </div>
+                    </div>
+
+                    <!-- Kategori 4: Modern & Kreatif -->
+                    <div class="palette-category">
+                        <span class="palette-category-title">Modern & Kreatif</span>
+                        <div class="color-swatches-grid">
+                            <button type="button" class="color-swatch-btn" data-color="#4f46e5" style="background:#4f46e5;" onclick="setPrimaryColor('#4f46e5')" title="Asil İndigo"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#7c3aed" style="background:#7c3aed;" onclick="setPrimaryColor('#7c3aed')" title="Kraliyet Moru"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#d97706" style="background:#d97706;" onclick="setPrimaryColor('#d97706')" title="Kehribar"></button>
+                            <button type="button" class="color-swatch-btn" data-color="#c2410c" style="background:#c2410c;" onclick="setPrimaryColor('#c2410c')" title="Kiremit"></button>
+                        </div>
+                    </div>
+
+                    <!-- Özel Renk Seçici (Color Picker Input) -->
+                    <div class="custom-color-row">
+                        <label class="custom-color-label">
+                            <span>Özel Renk Seç (HEX):</span>
+                            <input type="color" id="customColorInput" class="custom-color-input" value="#0f172a" onchange="setCustomPrimaryColor(this.value)">
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -458,9 +514,9 @@
          MODALLER (Şablon Galerisi, Sektör Seçici, ATS Raporu, Paylaşım)
          ============================================================ -->
 
-    <!-- 1. GÖRSEL ŞABLON GALERİSİ MODALI (Requirement 3) -->
+    <!-- 1. GÖRSEL ŞABLON GALERİSİ MODALI (Gerçekçi Dikey A4 Önizlemeleri) -->
     <div id="templateModal" class="modal-overlay">
-        <div class="modal-card" style="max-width: 680px;">
+        <div class="modal-card">
             <div class="modal-header">
                 <span class="modal-title">🎨 CV Şablonu Seçin</span>
                 <button type="button" class="modal-close-btn" onclick="closeModal('templateModal')">✕</button>
@@ -473,38 +529,59 @@
                     
                     <!-- 1. Klasik ATS (Ivy League) -->
                     <div class="template-card" data-template="ivy" onclick="selectTemplateFromModal('ivy')">
-                        <div class="template-mock-preview mock-ivy">
-                            <div class="mock-name"></div>
-                            <div class="mock-contacts"></div>
-                            <div class="mock-line"></div>
-                            <div class="mock-sec-title"></div>
-                            <div class="mock-row"><div class="mock-text-bold"></div><div class="mock-text-date"></div></div>
-                            <div class="mock-para"></div>
-                            <div class="mock-para" style="width: 70%;"></div>
+                        <div class="mini-a4-page mini-ivy">
+                            <div class="mini-ivy-head">
+                                <div class="mini-ivy-name">CANER ÖZTÜRK</div>
+                                <div class="mini-ivy-sub">İstanbul • caner@ornek.com • 0532 555 01 23</div>
+                            </div>
+                            <div class="mini-ivy-sec">
+                                <div class="mini-ivy-title">İŞ DENEYİMİ</div>
+                                <div class="mini-ivy-row"><span>Kıdemli Mühendis</span><span class="mini-ivy-date">2022-Günümüz</span></div>
+                                <div class="mini-ivy-desc">TechNova A.Ş. • %35 performans artışı</div>
+                                <div class="mini-ivy-row" style="margin-top:2px;"><span>Yazılım Geliştirici</span><span class="mini-ivy-date">2019-2022</span></div>
+                            </div>
+                            <div class="mini-ivy-sec">
+                                <div class="mini-ivy-title">EĞİTİM</div>
+                                <div class="mini-ivy-row"><span>İstanbul Teknik Üniv.</span><span class="mini-ivy-date">2018</span></div>
+                                <div class="mini-ivy-desc">Bilgisayar Mühendisliği (GNO: 3.68)</div>
+                            </div>
+                            <div class="mini-ivy-sec">
+                                <div class="mini-ivy-title">YETKİNLİKLER</div>
+                                <div class="mini-ivy-desc">JavaScript • Python • Docker • AWS • SQL</div>
+                            </div>
                         </div>
                         <div class="template-card-info">
-                            <div class="template-card-title">Klasik ATS (Ivy League)</div>
+                            <div class="template-card-header-row">
+                                <div class="template-card-title">Klasik ATS (Ivy League)</div>
+                                <span class="template-select-indicator"></span>
+                            </div>
                             <div class="template-badges-row">
-                                <span class="template-badge highlight">★ En Çok Önerilen</span>
-                                <span class="template-badge">%100 ATS</span>
+                                <span class="template-badge highlight">★ En Çok Tercih Edilen</span>
+                                <span class="template-badge">%100 ATS Uyumlu</span>
                                 <span class="template-badge">Fotoğrafsız</span>
                             </div>
-                            <p class="template-desc">Harvard & Stanford kurumsal standardı. Hukuk, Finans, Sağlık, Mühendislik ve resmi şirketler için altın standart.</p>
+                            <p class="template-desc">Harvard & Stanford kurumsal standardı. Hukuk, Finans, Sağlık, Mühendislik ve tüm resmi başvurular için altın standart.</p>
                         </div>
                     </div>
 
                     <!-- 2. Kurumsal ATS -->
                     <div class="template-card" data-template="ats" onclick="selectTemplateFromModal('ats')">
-                        <div class="template-mock-preview mock-ats">
-                            <div class="mock-name-center"></div>
-                            <div class="mock-cont-center"></div>
-                            <div class="mock-sec-head"></div>
-                            <div style="height: 4px; width: 85%; background: #94a3b8; margin: 4px auto;"></div>
-                            <div style="height: 3px; width: 70%; background: #cbd5e1; margin: 2px auto;"></div>
-                            <div class="mock-sec-head" style="margin-top: 8px;"></div>
+                        <div class="mini-a4-page mini-ats">
+                            <div class="mini-ats-name">CANER ÖZTÜRK</div>
+                            <div class="mini-ats-meta">caner@ornek.com • 0532 555 01 23 • İstanbul</div>
+                            <div class="mini-ats-title">İŞ DENEYİMİ</div>
+                            <div class="mini-ats-row"><span>Kıdemli Mühendis</span><span style="font-weight:400; color:#666;">2022-Günümüz</span></div>
+                            <div style="font-size:3.2px; color:#444; text-align:left; margin-bottom:3px;">TechNova A.Ş. | Mimari ve optimizasyon</div>
+                            <div class="mini-ats-title">EĞİTİM</div>
+                            <div class="mini-ats-row"><span>İstanbul Teknik Üniv.</span><span style="font-weight:400; color:#666;">2018</span></div>
+                            <div class="mini-ats-title" style="margin-top:3px;">YETKİNLİKLER</div>
+                            <div style="font-size:3.2px; color:#444; text-align:left;">Python • SQL • Bulut • Sistemler</div>
                         </div>
                         <div class="template-card-info">
-                            <div class="template-card-title">Kurumsal ATS</div>
+                            <div class="template-card-header-row">
+                                <div class="template-card-title">Kurumsal ATS</div>
+                                <span class="template-select-indicator"></span>
+                            </div>
                             <div class="template-badges-row">
                                 <span class="template-badge">Tek Sütun</span>
                                 <span class="template-badge">Resmi Format</span>
@@ -515,22 +592,31 @@
 
                     <!-- 3. Modern (İki Sütunlu) -->
                     <div class="template-card" data-template="modern" onclick="selectTemplateFromModal('modern')">
-                        <div class="template-mock-preview mock-modern">
-                            <div class="mock-sidebar">
-                                <div class="mock-avatar"></div>
-                                <div class="mock-side-pill"></div>
-                                <div class="mock-side-pill" style="width: 60%;"></div>
-                                <div class="mock-side-pill" style="width: 75%; margin-top: 6px;"></div>
+                        <div class="mini-a4-page mini-modern">
+                            <div class="mini-mod-side">
+                                <div class="mini-mod-avatar"></div>
+                                <div style="font-size:3.2px; font-weight:700; color:var(--accent-blue);">İLETİŞİM</div>
+                                <div class="mini-mod-chip"></div>
+                                <div class="mini-mod-chip" style="width:70%;"></div>
+                                <div style="font-size:3.2px; font-weight:700; color:var(--accent-blue); margin-top:2px;">YETENEKLER</div>
+                                <div class="mini-mod-chip" style="width:80%;"></div>
+                                <div class="mini-mod-chip" style="width:65%;"></div>
                             </div>
-                            <div class="mock-main">
-                                <div class="mock-main-name"></div>
-                                <div class="mock-main-sub"></div>
-                                <div style="height: 3px; width: 90%; background: #cbd5e1; margin-top: 4px;"></div>
-                                <div style="height: 3px; width: 80%; background: #cbd5e1;"></div>
+                            <div class="mini-mod-main">
+                                <div class="mini-mod-name">Caner Öztürk</div>
+                                <div class="mini-mod-role">Kıdemli Mühendis</div>
+                                <div style="font-size:3.5px; font-weight:700; color:#0f172a; margin-top:1px;">DENEYİM</div>
+                                <div style="font-size:3.2px; color:#333;">TechNova A.Ş.</div>
+                                <div style="font-size:3px; color:#666;">• 2M+ kullanıcı optimizasyonu</div>
+                                <div style="font-size:3.5px; font-weight:700; color:#0f172a; margin-top:2px;">EĞİTİM</div>
+                                <div style="font-size:3.2px; color:#333;">İTÜ Mühendislik</div>
                             </div>
                         </div>
                         <div class="template-card-info">
-                            <div class="template-card-title">Modern (İki Sütunlu)</div>
+                            <div class="template-card-header-row">
+                                <div class="template-card-title">Modern (İki Sütunlu)</div>
+                                <span class="template-select-indicator"></span>
+                            </div>
                             <div class="template-badges-row">
                                 <span class="template-badge highlight">Fotoğraflı</span>
                                 <span class="template-badge">Renkli Kenar Çubuğu</span>
@@ -541,22 +627,32 @@
 
                     <!-- 4. Minimalist Editoryal -->
                     <div class="template-card" data-template="minimal" onclick="selectTemplateFromModal('minimal')">
-                        <div class="template-mock-preview mock-minimal">
-                            <div class="mock-head-split">
-                                <div style="height: 6px; width: 40%; background: #0f172a;"></div>
-                                <div style="height: 4px; width: 30%; background: #94a3b8;"></div>
+                        <div class="mini-a4-page mini-minimal">
+                            <div class="mini-min-head">
+                                <div class="mini-min-name">Caner Öztürk</div>
+                                <div style="font-size:3.2px; color:#666;">İstanbul</div>
                             </div>
-                            <div class="mock-rows-grid" style="margin-top: 4px;">
-                                <div style="height: 4px; width: 80%; background: #94a3b8;"></div>
-                                <div style="height: 4px; width: 95%; background: #334155;"></div>
+                            <div class="mini-min-grid">
+                                <div class="mini-min-tag">ÖZET</div>
+                                <div style="font-size:3.2px; color:#333; line-height:1.2;">6+ yıl deneyimli profesyonel mühendislik profili.</div>
                             </div>
-                            <div class="mock-rows-grid" style="margin-top: 4px;">
-                                <div style="height: 4px; width: 70%; background: #94a3b8;"></div>
-                                <div style="height: 4px; width: 90%; background: #334155;"></div>
+                            <div class="mini-min-grid">
+                                <div class="mini-min-tag">DENEYİM</div>
+                                <div>
+                                    <div style="font-size:3.4px; font-weight:700;">Yazılım Mühendisi</div>
+                                    <div style="font-size:3px; color:#666;">TechNova A.Ş. • 2022</div>
+                                </div>
+                            </div>
+                            <div class="mini-min-grid">
+                                <div class="mini-min-tag">EĞİTİM</div>
+                                <div style="font-size:3.2px; color:#333;">İTÜ Bilgisayar Müh.</div>
                             </div>
                         </div>
                         <div class="template-card-info">
-                            <div class="template-card-title">Minimalist Editoryal</div>
+                            <div class="template-card-header-row">
+                                <div class="template-card-title">Minimalist Editoryal</div>
+                                <span class="template-select-indicator"></span>
+                            </div>
                             <div class="template-badges-row">
                                 <span class="template-badge">Zarif Tipografi</span>
                                 <span class="template-badge">Ferah Alanlar</span>

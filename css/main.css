@@ -374,13 +374,18 @@ html, body {
     border-radius: 16px;
     width: 100%;
     max-width: 620px;
-    max-height: 85vh;
+    max-height: 88vh;
     overflow-y: auto;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
     transform: scale(0.95);
     transition: transform var(--transition-fast);
+}
+
+#templateModal .modal-card {
+    max-width: 800px;
+    max-height: 90vh;
 }
 
 .modal-overlay.active .modal-card {
@@ -429,7 +434,9 @@ html, body {
     gap: 16px;
 }
 
-/* Şablon Galerisi Grid & Minyatür Önizleme */
+/* ============================================================
+   Görsel Şablon Galerisi (Gerçekçi Dikey A4 Minyatürleri)
+   ============================================================ */
 .templates-gallery-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -437,95 +444,246 @@ html, body {
 }
 
 .template-card {
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.7);
     border: 2px solid var(--border-subtle);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 14px;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 105px 1fr;
+    gap: 14px;
+    align-items: center;
     transition: all var(--transition-fast);
     position: relative;
+    user-select: none;
 }
 
 .template-card:hover {
     border-color: var(--accent-blue);
+    background: rgba(30, 41, 59, 0.9);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.3);
 }
 
 .template-card.active {
     border-color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.08);
+    background: rgba(59, 130, 246, 0.12);
+    box-shadow: 0 0 0 1px var(--accent-blue);
 }
 
-.template-card.active::after {
-    content: "✓ Seçili";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--accent-blue);
+.template-card.active .template-select-indicator {
+    background: var(--accent-emerald);
     color: #ffffff;
+    border-color: var(--accent-emerald);
+}
+
+.template-card.active .template-select-indicator::after {
+    content: "✓ Seçili";
+}
+
+.template-select-indicator {
     font-size: 10px;
     font-weight: 700;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+    transition: all var(--transition-fast);
 }
 
-/* Şablon Minyatür Mockup Çizimleri */
-.template-mock-preview {
-    height: 120px;
+.template-select-indicator::after {
+    content: "Seç";
+}
+
+/* Gerçekçi Dikey A4 Kağıt Minyatürü (1 : 1.414 Oranı) */
+.mini-a4-page {
+    width: 105px;
+    height: 148px;
     background: #ffffff;
-    border-radius: 6px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 3px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    overflow: hidden;
-    user-select: none;
-    pointer-events: none;
 }
 
-/* 1. Ivy League Minyatür */
-.mock-ivy .mock-name { height: 7px; width: 45%; background: #1a1a1a; border-radius: 2px; }
-.mock-ivy .mock-contacts { height: 3px; width: 85%; background: #94a3b8; border-radius: 1px; }
-.mock-ivy .mock-line { height: 1.5px; width: 100%; background: #1a1a1a; margin: 2px 0; }
-.mock-ivy .mock-sec-title { height: 4px; width: 25%; background: #1a1a1a; border-bottom: 0.5px solid #ccc; margin-top: 3px; }
-.mock-ivy .mock-row { display: flex; justify-content: space-between; margin-top: 2px; }
-.mock-ivy .mock-text-bold { height: 4px; width: 40%; background: #334155; }
-.mock-ivy .mock-text-date { height: 3px; width: 20%; background: #94a3b8; }
-.mock-ivy .mock-para { height: 3px; width: 90%; background: #cbd5e1; margin-top: 2px; }
+/* 1. Ivy League Minyatür A4 */
+.mini-ivy {
+    padding: 8px 7px;
+    font-family: Arial, sans-serif;
+    color: #1a1a1a;
+}
+.mini-ivy-head {
+    border-bottom: 1px solid #1a1a1a;
+    padding-bottom: 3px;
+    margin-bottom: 4px;
+}
+.mini-ivy-name {
+    font-size: 5.5px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.2px;
+}
+.mini-ivy-sub {
+    font-size: 3.5px;
+    color: #555;
+    margin-top: 1px;
+}
+.mini-ivy-sec {
+    margin-bottom: 3px;
+}
+.mini-ivy-title {
+    font-size: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 0.5px solid #ccc;
+    padding-bottom: 1px;
+    margin-bottom: 1.5px;
+}
+.mini-ivy-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 3.6px;
+    font-weight: 700;
+}
+.mini-ivy-date {
+    font-size: 3.2px;
+    color: #777;
+    font-weight: 400;
+}
+.mini-ivy-desc {
+    font-size: 3.2px;
+    color: #444;
+    line-height: 1.25;
+}
 
-/* 2. Modern İki Sütun Minyatür */
-.mock-modern { display: grid !important; grid-template-columns: 32% 1fr; gap: 6px; padding: 0 !important; }
-.mock-modern .mock-sidebar { background: #f1f5f9; padding: 8px; display: flex; flex-direction: column; gap: 4px; }
-.mock-modern .mock-avatar { width: 18px; height: 18px; border-radius: 50%; background: #cbd5e1; margin-bottom: 4px; }
-.mock-modern .mock-side-pill { height: 3px; width: 80%; background: #94a3b8; }
-.mock-modern .mock-main { padding: 8px; display: flex; flex-direction: column; gap: 4px; }
-.mock-modern .mock-main-name { height: 7px; width: 60%; background: #0f172a; }
-.mock-modern .mock-main-sub { height: 4px; width: 40%; background: var(--accent-blue); }
+/* 2. Kurumsal ATS Minyatür A4 */
+.mini-ats {
+    padding: 8px 7px;
+    text-align: center;
+    color: #111;
+}
+.mini-ats-name {
+    font-size: 5.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.mini-ats-meta {
+    font-size: 3.2px;
+    color: #666;
+    margin: 1px 0 3px;
+}
+.mini-ats-title {
+    font-size: 4px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-bottom: 1px solid #111;
+    text-align: left;
+    margin-bottom: 2px;
+    padding-bottom: 1px;
+}
+.mini-ats-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 3.5px;
+    text-align: left;
+    font-weight: 700;
+}
 
-/* 3. Kurumsal ATS Minyatür */
-.mock-ats { text-align: center; }
-.mock-ats .mock-name-center { height: 6px; width: 50%; background: #000; margin: 0 auto; }
-.mock-ats .mock-cont-center { height: 3px; width: 75%; background: #64748b; margin: 3px auto; }
-.mock-ats .mock-sec-head { height: 4px; width: 30%; background: #000; border-bottom: 1px solid #000; margin-top: 5px; }
+/* 3. Modern İki Sütunlu Minyatür A4 */
+.mini-modern {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    height: 100%;
+}
+.mini-mod-side {
+    background: #f1f5f9;
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-right: 0.5px solid #e2e8f0;
+}
+.mini-mod-avatar {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    margin: 0 auto 2px;
+    border: 1px solid #94a3b8;
+}
+.mini-mod-chip {
+    height: 3px;
+    background: #cbd5e1;
+    border-radius: 1px;
+    width: 90%;
+}
+.mini-mod-main {
+    padding: 7px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.mini-mod-name {
+    font-size: 5.5px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.mini-mod-role {
+    font-size: 3.5px;
+    color: var(--accent-blue);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
 
-/* 4. Minimalist Minyatür */
-.mock-minimal { display: flex; flex-direction: column; gap: 5px; }
-.mock-minimal .mock-head-split { display: flex; justify-content: space-between; border-bottom: 0.5px solid #e2e8f0; padding-bottom: 4px; }
-.mock-minimal .mock-rows-grid { display: grid; grid-template-columns: 25% 1fr; gap: 4px; }
+/* 4. Minimalist Minyatür A4 */
+.mini-minimal {
+    padding: 8px 7px;
+}
+.mini-min-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 0.5px solid #e2e8f0;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+.mini-min-name {
+    font-size: 5.5px;
+    font-weight: 700;
+}
+.mini-min-grid {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 3px;
+    margin-bottom: 3px;
+}
+.mini-min-tag {
+    font-size: 3.2px;
+    color: #94a3b8;
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
 .template-card-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
+}
+
+.template-card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .template-card-title {
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: var(--text-primary);
 }
@@ -552,9 +710,145 @@ html, body {
 }
 
 .template-desc {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
-    line-height: 1.35;
+    line-height: 1.4;
+}
+
+/* ============================================================
+   Gelişmiş Vurgu Rengi Açılır Menüsü (Color Dropdown Popover)
+   ============================================================ */
+.color-dropdown-wrap {
+    position: relative;
+}
+
+.color-indicator-preview {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.color-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 290px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.color-dropdown-menu.active {
+    display: flex;
+    animation: toastIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.color-dropdown-header {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 8px;
+}
+
+.color-dropdown-header span:first-child {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.color-dropdown-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.palette-category {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.palette-category-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.color-swatches-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+.color-swatch-btn {
+    width: 100%;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-swatch-btn:hover {
+    transform: scale(1.12);
+    z-index: 2;
+}
+
+.color-swatch-btn.active {
+    border-color: #ffffff;
+    transform: scale(1.15);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.color-swatch-btn.active::after {
+    content: "✓";
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.custom-color-row {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-color-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.custom-color-input {
+    width: 32px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
 }
 
 .sector-card {

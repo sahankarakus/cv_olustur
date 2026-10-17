@@ -29,6 +29,7 @@ function initApp() {
     loadSavedData();
     checkUrlSharedData();
     setupEventListeners();
+    setupModalClosingListeners();
     populateFormFromData();
     applySettings();
     updateFormVisibilityForTemplate();
@@ -751,8 +752,86 @@ window.updateCertificateField = function(index, field, value) {
 };
 
 // ==========================================
-// Akordeon & Kart Açıp/Kapatma
+// Evrensel Kapatma (ESC Tuşu & Boş Alana Tıklama - Requirement 2)
 // ==========================================
+function setupModalClosingListeners() {
+    // 1. ESC tuşu ile açık modalleri ve açılır menüleri kapatma
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            closeAllModals();
+            closeColorDropdown();
+        }
+    });
+
+    // 2. Modalin dışındaki boş alana (overlay üzerine) tıklandığında kapatma
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+    });
+
+    // 3. Renk açılır menüsü dışına tıklandığında menüyü kapatma
+    document.addEventListener('click', (e) => {
+        const wrap = document.querySelector('.color-dropdown-wrap');
+        const menu = document.getElementById('colorDropdownMenu');
+        if (wrap && menu && !wrap.contains(e.target)) {
+            menu.classList.remove('active');
+        }
+    });
+}
+
+window.closeAllModals = function() {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+};
+
+// ==========================================
+// Gelişmiş Vurgu Rengi Seçici (Requirement 3)
+// ==========================================
+window.toggleColorDropdown = function(event) {
+    if (event) event.stopPropagation();
+    const menu = document.getElementById('colorDropdownMenu');
+    if (menu) {
+        menu.classList.toggle('active');
+    }
+};
+
+window.closeColorDropdown = function() {
+    const menu = document.getElementById('colorDropdownMenu');
+    if (menu) menu.classList.remove('active');
+};
+
+window.setPrimaryColor = function(hexColor) {
+    appState.settings.primaryColor = hexColor;
+
+    // Header göstergesini güncelle
+    const indicator = document.querySelector('.color-indicator-preview');
+    if (indicator) indicator.style.backgroundColor = hexColor;
+
+    // Menüdeki aktif renk butonunu işaretle
+    document.querySelectorAll('.color-swatch-btn').forEach(btn => {
+        if (btn.dataset.color.toLowerCase() === hexColor.toLowerCase()) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Özel renk inputunu da senkronize et
+    const customInput = document.getElementById('customColorInput');
+    if (customInput) customInput.value = hexColor;
+
+    renderPreview();
+    saveData();
+    closeColorDropdown();
+    showToast("Vurgu rengi güncellendi.", "info");
+};
+
+window.setCustomPrimaryColor = function(hexColor) {
+    if (!hexColor) return;
+    setPrimaryColor(hexColor);
+};
 window.toggleSection = function(headerEl) {
     const section = headerEl.closest('.editor-section');
     if (section) section.classList.toggle('collapsed');
@@ -1290,18 +1369,23 @@ function setupEventListeners() {
 }
 
 function applySettings() {
-    const activeTplBtn = document.querySelector(`.template-btn[data-template="${appState.settings.template}"]`);
-    if (activeTplBtn) {
-        document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
-        activeTplBtn.classList.add('active');
-    }
+    // Aktif renk swatch'ı ve göstergeyi senkronize et
+    const activeColor = appState.settings.primaryColor || '#0f172a';
+    const indicator = document.querySelector('.color-indicator-preview');
+    if (indicator) indicator.style.backgroundColor = activeColor;
 
-    const activeDot = document.querySelector(`.color-dot[data-color="${appState.settings.primaryColor}"]`);
-    if (activeDot) {
-        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-        activeDot.classList.add('active');
-    }
+    document.querySelectorAll('.color-swatch-btn').forEach(btn => {
+        if (btn.dataset.color && btn.dataset.color.toLowerCase() === activeColor.toLowerCase()) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
 
+    const customInput = document.getElementById('customColorInput');
+    if (customInput) customInput.value = activeColor;
+
+    // Font seçimi
     const fontSelect = document.getElementById('fontSelector');
     if (fontSelect && appState.settings.fontFamily) {
         fontSelect.value = appState.settings.fontFamily;
