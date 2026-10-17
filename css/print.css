@@ -1,0 +1,87 @@
+/* ============================================================
+   CVZirve - Yazdırma ve Vektörel PDF Çıktı Stilleri (@media print)
+   ============================================================ */
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0mm;
+    }
+
+    *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    html, body {
+        width: 210mm !important;
+        height: auto !important;
+        min-height: 297mm !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Arayüz elemanlarını gizle */
+    .app-header,
+    .editor-panel,
+    .mobile-view-tabs,
+    .preview-toolbar,
+    .page-info-tag,
+    .page-break-line,
+    .toast-container {
+        display: none !important;
+    }
+
+    /* Sahne ve kapsayıcıları sıfırla */
+    .app-workspace {
+        display: block !important;
+        width: 210mm !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .preview-panel,
+    .preview-stage-container {
+        display: block !important;
+        width: 210mm !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+    }
+
+    .cv-paper-wrap {
+        transform: none !important;
+        width: 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .cv-paper {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Sayfa kesilmelerini (page-break) önleme */
+    .modern-timeline-item,
+    .ats-item,
+    .minimal-block,
+    .modern-project-card,
+    .modern-side-section,
+    .ats-section,
+    .minimal-row {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "CVZirve - Ücretsiz Profesyonel CV & Özgeçmiş Oluşturucu",
+  "short_name": "CVZirve",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "description": "Her meslek grubu için ücretsiz, gizlilik odaklı ve ATS uyumlu CV hazırlama stüdyosu.",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

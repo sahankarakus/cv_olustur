@@ -1,0 +1,175 @@
+/* ============================================================
+   CVZirve - Sağ Canlı Önizleme & A4 Stüdyo Stilleri
+   ============================================================ */
+
+.preview-panel {
+    background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%);
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Yüzen Önizleme Araç Çubuğu (Zoom Kontrolleri) */
+.preview-toolbar {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 30;
+    user-select: none;
+}
+
+.zoom-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.zoom-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.zoom-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.zoom-level-text {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 44px;
+    text-align: center;
+}
+
+.zoom-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border-subtle);
+}
+
+.fit-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.fit-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Sayfa Sonu Bilgi Rozeti */
+.page-info-tag {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-subtle);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.page-info-tag span.badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+}
+
+/* ============================================================
+   A4 Sahnesi & Kağıt Düzeni
+   ============================================================ */
+.preview-stage-container {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px 100px 20px;
+    cursor: grab;
+}
+
+.preview-stage-container:active {
+    cursor: grabbing;
+}
+
+.cv-paper-wrap {
+    transform-origin: top center;
+    transition: transform 0.15s ease-out;
+}
+
+/* A4 Kağıt Öğesi (Standart 210mm x 297mm) */
+.cv-paper {
+    width: 210mm;
+    min-height: 297mm;
+    background-color: #ffffff;
+    color: #1e293b;
+    box-shadow: var(--shadow-paper);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--cv-font);
+    box-sizing: border-box;
+}
+
+/* Sayfa Sonu Kılavuz Çizgisi (1. Sayfa Bitiş Uyarısı) */
+.page-break-line {
+    position: absolute;
+    top: 297mm;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 2px dashed rgba(239, 68, 68, 0.5);
+    z-index: 99;
+    pointer-events: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.page-break-line::after {
+    content: "1. Sayfa Sınırı (A4 Bitişi)";
+    font-family: var(--font-ui);
+    font-size: 10px;
+    color: #ef4444;
+    background: #ffffff;
+    padding: 2px 8px;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 4px;
+    transform: translateY(-50%);
+    margin-right: 12px;
+    font-weight: 600;
+}

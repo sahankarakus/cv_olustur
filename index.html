@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVZirve | Her Meslek İçin Ücretsiz, ATS Uyumlu CV Oluşturucu</title>
+    <meta name="description" content="Yazılım, Hukuk, Sağlık, Finans, Satış, Tasarım ve Yeni Mezunlar için 100% ücretsiz, gizlilik odaklı ve ATS uyumlu profesyonel CV hazırlayıcı.">
+    <meta name="keywords" content="cv oluşturucu, özgeçmiş hazırla, avukat cv, doktor cv, mühendis cv, ats uyumlu cv, ücretsiz cv indir">
+
+    <!-- PWA Desteği -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Dosyaları -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/preview.css">
+    <link rel="stylesheet" href="css/templates.css">
+    <link rel="stylesheet" href="css/print.css" media="print">
+</head>
+<body>
+
+    <!-- ============================================================
+         Üst Gezinme Çubuğu (Navbar / Header)
+         ============================================================ -->
+    <header class="app-header">
+        <div class="header-brand">
+            <div class="brand-logo-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="brand-text-wrap">
+                <span class="brand-title">CVZirve</span>
+                <span class="brand-subtitle">Evrensel CV Stüdyosu</span>
+            </div>
+        </div>
+
+        <!-- Şablon & Tema Kontrolleri -->
+        <div class="header-controls">
+            <!-- Şablon Seçici -->
+            <div class="control-group">
+                <span class="control-label">Şablon</span>
+                <div class="template-selector">
+                    <button type="button" class="template-btn active" data-template="ivy" title="Şahan Karakuş & Harvard / Ivy League Standartı">Klasik ATS (Ivy)</button>
+                    <button type="button" class="template-btn" data-template="ats">Kurumsal ATS</button>
+                    <button type="button" class="template-btn" data-template="modern">Modern</button>
+                    <button type="button" class="template-btn" data-template="minimal">Minimalist</button>
+                </div>
+            </div>
+
+            <!-- Sektör Değiştirici Buton -->
+            <button type="button" class="btn btn-ghost" onclick="openSectorModal()" style="border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.08);" title="Mesleğinize uygun hazır örnek profil yükleyin">
+                <span>🎯 Sektör Seç (7 Alan)</span>
+            </button>
+
+            <!-- Dil Değiştirici -->
+            <button type="button" id="btnLangToggle" class="btn btn-ghost" onclick="toggleLanguage()" title="Şablon başlıklarını Türkçe / İngilizce arasında değiştirir">
+                TR 🇹🇷
+            </button>
+
+            <!-- Canlı ATS Skor Rozeti -->
+            <button type="button" id="atsScoreBadge" class="btn btn-ghost" onclick="openAtsScoreModal()" style="font-weight: 700; border-width: 1.5px;" title="ATS Uyumluluk Analizi ve İpuçları">
+                ATS: 85/100
+            </button>
+        </div>
+
+        <!-- Eylem Butonları -->
+        <div class="header-actions">
+            <!-- Veritabanısız Paylaşım Butonu -->
+            <button type="button" class="btn btn-ghost" onclick="openShareModal()" title="Veritabanı olmadan paylaşılabilir link ve QR kod üretir">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                <span>Paylaş</span>
+            </button>
+
+            <button type="button" class="btn btn-ghost" onclick="exportCvJson()" title="CV verilerinizi JSON olarak bilgisayarınıza indirin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Yedekle</span>
+            </button>
+
+            <button type="button" class="btn btn-ghost" onclick="triggerJsonUpload()" title="Daha önce indirdiğiniz JSON yedeğini yükleyin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Yükle</span>
+            </button>
+
+            <!-- PDF İndir Butonu -->
+            <button type="button" class="btn btn-primary" onclick="printCv()" title="Yüksek çözünürlüklü A4 PDF olarak kaydedin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                <span>PDF İndir</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         Ana Çalışma Alanı
+         ============================================================ -->
+    <main class="app-workspace">
+        
+        <!-- SOL FORM PANELİ -->
+        <aside class="editor-panel">
+            <div class="editor-header-bar">
+                <div class="editor-title-row">
+                    <span class="editor-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Özgeçmiş Formu
+                    </span>
+                    <span id="completionBadge" class="completion-badge">%85 Dolu</span>
+                </div>
+                <div class="progress-track">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Form Bölümleri Listesi -->
+            <div class="editor-content">
+                
+                <!-- 0. KİŞİSEL BİLGİLER (Sabit Başlık) -->
+                <div class="editor-section" data-section="personal">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </span>
+                            <span class="section-title">Kişisel Bilgiler & İletişim</span>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <!-- Profil Fotoğrafı Yükleme -->
+                        <div class="photo-uploader">
+                            <div id="photoPreviewContainer" class="photo-preview">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </div>
+                            <div class="photo-actions">
+                                <div class="photo-actions-row">
+                                    <label class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.78rem;">
+                                        Fotoğraf Yükle
+                                        <input type="file" id="photoFileInput" class="file-input-hidden" accept="image/*" onchange="handlePhotoUpload(event)">
+                                    </label>
+                                    <button type="button" id="btnRemovePhoto" class="btn btn-ghost danger" style="padding: 6px 10px; font-size: 0.78rem; display: none;" onclick="removePhoto()">Kaldır</button>
+                                </div>
+                                <span class="photo-hint">İsteğe bağlıdır (ATS için fotoğraf zorunlu değildir)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="inputFullName">Ad Soyad</label>
+                                <input type="text" id="inputFullName" class="form-input" placeholder="Örn: Av. Zeynep Kaya / Dr. Caner Öztürk">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inputTitle">Mesleki Ünvan / Uzmanlık</label>
+                                <input type="text" id="inputTitle" class="form-input" placeholder="Örn: Şirketler Hukuku Avukatı / İç Hastalıkları Uzmanı">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="inputEmail">E-posta</label>
+                                <input type="email" id="inputEmail" class="form-input" placeholder="ornek@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inputPhone">Telefon</label>
+                                <input type="tel" id="inputPhone" class="form-input" placeholder="+90 532 555 01 23">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="inputLocation">Konum / Şehir</label>
+                                <input type="text" id="inputLocation" class="form-input" placeholder="Çankaya, Ankara">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inputWebsite">Web Sitesi / Portfolyo</label>
+                                <input type="text" id="inputWebsite" class="form-input" placeholder="alanadiniz.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="inputLinkedin">LinkedIn Profili</label>
+                                <input type="text" id="inputLinkedin" class="form-input" placeholder="linkedin.com/in/kullanici">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="inputGithub">GitHub / Behance / Diğer Bağlantı</label>
+                                <input type="text" id="inputGithub" class="form-input" placeholder="github.com veya behance.net/kullanici">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. HAKKIMDA / ÖZET -->
+                <div class="editor-section" data-section="summary">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            </span>
+                            <span id="titleLabel_summary" class="section-title">Hakkımda / Profesyonel Özet</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('summary', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('summary', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('summary', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div class="form-group">
+                            <textarea id="inputSummary" class="form-textarea" rows="4" placeholder="Kariyer hedeflerinizi, uzmanlık alanlarınızı ve başarılarınızı özetleyin..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. İŞ DENEYİMİ -->
+                <div class="editor-section" data-section="experience">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            </span>
+                            <span id="titleLabel_experience" class="section-title">İş & Mesleki Deneyim</span>
+                            <span id="expCountBadge" class="section-count-badge">0</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('experience', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('experience', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('experience', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div id="experienceList" class="dynamic-list"></div>
+                        <button type="button" class="btn-add-item" onclick="addExperience()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Yeni Deneyim Ekle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. EĞİTİM -->
+                <div class="editor-section" data-section="education">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                            </span>
+                            <span id="titleLabel_education" class="section-title">Eğitim Bilgileri</span>
+                            <span id="eduCountBadge" class="section-count-badge">0</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('education', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('education', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('education', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div id="educationList" class="dynamic-list"></div>
+                        <button type="button" class="btn-add-item" onclick="addEducation()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Yeni Eğitim Ekle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. YETENEKLER & UZMANLIKLAR -->
+                <div class="editor-section" data-section="skills">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            </span>
+                            <span id="titleLabel_skills" class="section-title">Yetenekler & Uzmanlıklar</span>
+                            <span id="skillsCountBadge" class="section-count-badge">0</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('skills', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('skills', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('skills', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div id="skillsPills" class="skills-tags-wrap"></div>
+                        <div class="skills-input-row">
+                            <input type="text" id="newSkillInput" class="form-input" placeholder="Yetkinlik yazıp Enter'a basın...">
+                            <button type="button" class="btn btn-ghost" onclick="addSkillFromInput()">Ekle</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. PROJELER / VAKA DOSYALARI -->
+                <div class="editor-section" data-section="projects">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </span>
+                            <span id="titleLabel_projects" class="section-title">Projeler & Dosyalar</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('projects', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('projects', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('projects', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div id="projectsList" class="dynamic-list"></div>
+                        <button type="button" class="btn-add-item" onclick="addProject()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Yeni Proje / Dosya Ekle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 6. SERTİFİKALAR & RUHSATLAR -->
+                <div class="editor-section" data-section="certificates">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                            </span>
+                            <span id="titleLabel_certificates" class="section-title">Sertifikalar & Ruhsatlar</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('certificates', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('certificates', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('certificates', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div id="certificatesList" class="dynamic-list"></div>
+                        <button type="button" class="btn-add-item" onclick="addCertificate()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Yeni Sertifika Ekle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 7. YABANCI DİLLER -->
+                <div class="editor-section" data-section="languages">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            </span>
+                            <span id="titleLabel_languages" class="section-title">Yabancı Diller</span>
+                        </div>
+                        <div class="section-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('languages', -1, event)" title="Yukarı Taşı">▲</button>
+                            <button type="button" class="section-reorder-btn" onclick="moveSection('languages', 1, event)" title="Aşağı Taşı">▼</button>
+                            <button type="button" class="section-reorder-btn" onclick="editSectionTitle('languages', event)" title="Başlığı Değiştir">✏️</button>
+                        </div>
+                        <span class="section-chevron">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        <div id="languagesList" class="dynamic-list"></div>
+                        <button type="button" class="btn-add-item" onclick="addLanguage()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Yeni Dil Ekle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ATS Tavsiye Kutusu -->
+                <div class="smart-tips-card">
+                    <div class="tips-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    </div>
+                    <div class="tips-content">
+                        <h4>İpucu: Her Meslek İçin Ölçülebilir Başarılar</h4>
+                        <p>Hukukta dava sayısı, sağlıkta hasta/servis hacmi, satışta ciro/kota yüzdesi, mühendislikte performans verileri ekleyin.</p>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- SAĞ CANLI ÖNİZLEME SAHNESİ -->
+        <section class="preview-panel">
+            <div class="page-info-tag">
+                <span class="badge-dot"></span>
+                <span>A4 Önizleme (210 x 297mm)</span>
+            </div>
+
+            <div id="previewStage" class="preview-stage-container">
+                <div id="cvPaperWrap" class="cv-paper-wrap">
+                    <div id="cvPaper" class="cv-paper"></div>
+                    <div class="page-break-line"></div>
+                </div>
+            </div>
+
+            <!-- Yüzen Önizleme Araç Çubuğu -->
+            <div class="preview-toolbar">
+                <button type="button" class="zoom-btn" onclick="changeZoom(-0.05)" title="Uzaklaştır">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <span id="zoomLevelText" class="zoom-level-text">85%</span>
+                <button type="button" class="zoom-btn" onclick="changeZoom(0.05)" title="Yakınlaştır">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <div class="zoom-divider"></div>
+                <!-- Sayfaya Sığdır / Kompaktlık Butonları -->
+                <button type="button" class="fit-btn compactness-btn" data-level="tight" onclick="setCompactness('tight')" title="Kenar boşluklarını daraltıp 1 sayfaya sığdırır">Sığdır (Kompakt)</button>
+                <button type="button" class="fit-btn compactness-btn active" data-level="normal" onclick="setCompactness('normal')">Normal</button>
+                <button type="button" class="fit-btn compactness-btn" data-level="loose" onclick="setCompactness('loose')">Ferah</button>
+                <div class="zoom-divider"></div>
+                <button type="button" class="fit-btn" onclick="autoFitPreview()">Ekrana Sığdır</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         MODALLER (Sektör Seçici, ATS Skoru, Cümle Bankası, Paylaşım)
+         ============================================================ -->
+
+    <!-- 1. SEKTÖR SEÇİCİ MODAL -->
+    <div id="sectorModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title">🎯 Meslek / Sektör Örnek Profili Seçin</span>
+                <button type="button" class="modal-close-btn" onclick="closeModal('sectorModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                    Aşağıdaki sektörlerden birini seçerek ilgili mesleğe özel hazır terminoloji, unvan ve yetkinliklerle dolu örnek CV yükleyebilirsiniz:
+                </p>
+                <div class="sector-grid">
+                    <div class="sector-card" onclick="selectSector('tech')">
+                        <div class="sector-card-top"><span class="sector-icon">💻</span><span class="sector-name">Yazılım & Bilişim</span></div>
+                        <span class="sector-desc">Kıdemli Tam Yığın Yazılım Mühendisi (Mikroservis, Bulut, CI/CD)</span>
+                    </div>
+                    <div class="sector-card" onclick="selectSector('law')">
+                        <div class="sector-card-top"><span class="sector-icon">⚖️</span><span class="sector-name">Hukuk & Avukatlık</span></div>
+                        <span class="sector-desc">Şirketler & Ticaret Hukuku Avukatı (Baro Sicil, M&A, KVKK, Dava)</span>
+                    </div>
+                    <div class="sector-card" onclick="selectSector('health')">
+                        <div class="sector-card-top"><span class="sector-icon">🏥</span><span class="sector-name">Sağlık & Tıp</span></div>
+                        <span class="sector-desc">İç Hastalıkları (Dahiliye) Uzmanı (Tescil No, Klinik, Yoğun Bakım)</span>
+                    </div>
+                    <div class="sector-card" onclick="selectSector('sales')">
+                        <div class="sector-card-top"><span class="sector-icon">💼</span><span class="sector-name">Satış & Pazarlama</span></div>
+                        <span class="sector-desc">B2B Satış Müdürü (Satış Kotaları, Gelir Yönetimi, CRM)</span>
+                    </div>
+                    <div class="sector-card" onclick="selectSector('student')">
+                        <div class="sector-card-top"><span class="sector-icon">🎓</span><span class="sector-name">Yeni Mezun & Öğrenci</span></div>
+                        <span class="sector-desc">Endüstri Mühendisi (Eğitim en üstte, Stajlar, Vaka Analizi, GNO)</span>
+                    </div>
+                    <div class="sector-card" onclick="selectSector('finance')">
+                        <div class="sector-card-top"><span class="sector-icon">📊</span><span class="sector-name">Finans & Muhasebe</span></div>
+                        <span class="sector-desc">Mali Müşavir / Finansal Analist (SMMM, IFRS, Bütçe, SAP)</span>
+                    </div>
+                    <div class="sector-card" onclick="selectSector('design')">
+                        <div class="sector-card-top"><span class="sector-icon">🎨</span><span class="sector-name">Tasarım & Mimarlık</span></div>
+                        <span class="sector-desc">İç Mimar & Proje Yöneticisi (Revit, 3ds Max, Şantiye, Portfolyo)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. ATS UYUMLULUK PUANLAYICI MODAL -->
+    <div id="atsScoreModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title">📊 ATS Uyumluluk Raporu</span>
+                <button type="button" class="modal-close-btn" onclick="closeModal('atsScoreModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="ats-score-hero">
+                    <div id="modalAtsCircle" class="ats-score-circle">
+                        <div id="modalAtsScoreText" class="ats-score-inner">85</div>
+                    </div>
+                    <div class="ats-score-details">
+                        <h4>ATS Kalite Skoru (100 Üzerinden)</h4>
+                        <p>İK sistemleri ve ATS robotları, ölçülebilir rakamlara, güçlü aksiyon fiillerine ve eksiksiz iletişim bilgilerine yüksek puan verir.</p>
+                    </div>
+                </div>
+                <div id="modalAtsChecklist" class="ats-checklist"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. AKSİYON FİİLLERİ & CÜMLE BANKASI MODAL -->
+    <div id="actionVerbsModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title">💡 Güçlü Aksiyon Fiilleri & Cümle Bankası</span>
+                <button type="button" class="modal-close-btn" onclick="closeModal('actionVerbsModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                    Tıklayarak doğrudan aktif deneyiminizin görev açıklamasına ekleyebilirsiniz:
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="ats-check-item" style="cursor: pointer;" onclick="insertActionBullet('Süreçleri optimize ederek operasyon ve teslimat sürelerini %25 oranında kısalttım.')">
+                        <span>➕ <strong>Optimizasyon:</strong> "Süreçleri optimize ederek operasyon ve teslimat sürelerini %25 oranında kısalttım."</span>
+                    </div>
+                    <div class="ats-check-item" style="cursor: pointer;" onclick="insertActionBullet('... kişilik ekibe liderlik ve koordinasyon sağlayarak projeyi bütçe dahilinde teslim ettim.')">
+                        <span>➕ <strong>Liderlik:</strong> "... kişilik ekibe liderlik ve koordinasyon sağlayarak projeyi bütçe dahilinde teslim ettim."</span>
+                    </div>
+                    <div class="ats-check-item" style="cursor: pointer;" onclick="insertActionBullet('Bütçe ve maliyet analizleri gerçekleştirerek yıllık bazda önemli tasarruf sağladım.')">
+                        <span>➕ <strong>Tasarruf & Finans:</strong> "Bütçe ve maliyet analizleri gerçekleştirerek yıllık bazda önemli tasarruf sağladım."</span>
+                    </div>
+                    <div class="ats-check-item" style="cursor: pointer;" onclick="insertActionBullet('Sıfırdan kurulan stratejik iş geliştirme kanalları ile müşteri portföyünü %35 büyüttüm.')">
+                        <span>➕ <strong>Büyüme & Satış:</strong> "Sıfırdan kurulan stratejik iş geliştirme kanalları ile müşteri portföyünü %35 büyüttüm."</span>
+                    </div>
+                    <div class="ats-check-item" style="cursor: pointer;" onclick="insertActionBullet('İlgili mevzuat ve kalite standartlarına tam uyumu sağlayan denetim kılavuzlarını hazırladım.')">
+                        <span>➕ <strong>Uyum & Denetim:</strong> "İlgili mevzuat ve kalite standartlarına tam uyumu sağlayan denetim kılavuzlarını hazırladım."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. SUNUCUSUZ (ZERO-BACKEND) PAYLAŞIM MODAL -->
+    <div id="shareModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-title">🔗 CV'nizi Paylaşın (Sunucusuz & Ücretsiz)</span>
+                <button type="button" class="modal-close-btn" onclick="closeModal('shareModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                    CV bilgileriniz URL hash'ine şifrelenmiştir. Bu linki alan kişi hiçbir veritabanına gerek olmadan CV'nizi görüntüleyebilir:
+                </p>
+                <div class="share-link-box">
+                    <input type="text" id="shareUrlInput" class="share-link-input" readonly>
+                    <button type="button" class="btn btn-primary" onclick="copyShareUrl()">Kopyala</button>
+                </div>
+                <div id="qrCodeContainer" class="qr-preview-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gizli JSON Dosya Girişi -->
+    <input type="file" id="jsonFileInput" class="file-input-hidden" accept=".json">
+
+    <!-- Toast Bildirim Kapsayıcısı -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JavaScript Dosyaları -->
+    <script src="js/sample-data.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+    </script>
+</body>
+</html>

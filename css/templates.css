@@ -1,0 +1,760 @@
+/* ============================================================
+   CVZirve - 4 Profesyonel Şablonun Detaylı Stilleri
+   1. Ivy League / Klasik ATS (Şahan Karakuş Standartı)
+   2. Modern (İki Sütunlu)
+   3. ATS / Kurumsal (Tek Sütunlu)
+   4. Minimalist (Zarif Editoryal)
+   ============================================================ */
+
+/* Genel Şablon Sıfırlamaları & Tipografi */
+.cv-template {
+    width: 100%;
+    min-height: 297mm;
+    box-sizing: border-box;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1e293b;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.cv-template h1, .cv-template h2, .cv-template h3, .cv-template h4 {
+    margin: 0;
+    line-height: 1.25;
+}
+
+.cv-template a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.cv-bullet-list {
+    margin: 4px 0 0 16px;
+    padding: 0;
+}
+
+.cv-bullet-list li {
+    margin-bottom: 3px;
+    line-height: 1.45;
+}
+
+.cv-paragraph {
+    margin-bottom: 4px;
+    line-height: 1.45;
+}
+
+/* ============================================================
+   1. IVY LEAGUE / KLASİK ATS (Şahan Karakuş & Harvard Standartı)
+   ============================================================ */
+.cv-template-ivy {
+    padding: 38px 46px;
+    font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a;
+    background: #ffffff;
+    line-height: 1.55;
+    font-size: 10.5pt;
+}
+
+.ivy-name {
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    color: #1a1a1a;
+}
+
+.ivy-contact {
+    font-size: 9.5pt;
+    color: #444444;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 5px;
+}
+
+.ivy-contact-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #444444;
+    text-decoration: none;
+}
+
+.ivy-contact-item svg {
+    width: 13px;
+    height: 13px;
+    color: #444444;
+    flex-shrink: 0;
+}
+
+.ivy-divider-top {
+    border: none;
+    border-top: 2px solid #1a1a1a;
+    margin: 12px 0 16px;
+}
+
+.ivy-section {
+    margin-bottom: 16px;
+}
+
+.ivy-section-title {
+    font-size: 8.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    padding-bottom: 3px;
+    border-bottom: 0.5px solid #cccccc;
+}
+
+.ivy-summary-text {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.55;
+    text-align: justify;
+}
+
+.ivy-entries-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ivy-entry {
+    margin-bottom: 4px;
+}
+
+.ivy-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.ivy-entry-title {
+    font-weight: 700;
+    font-size: 10.5pt;
+    color: #1a1a1a;
+}
+
+.ivy-entry-date {
+    font-size: 9.5pt;
+    color: #666666;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ivy-entry-sub {
+    font-size: 9.5pt;
+    color: #555555;
+    margin-bottom: 4px;
+    font-style: italic;
+}
+
+.ivy-entry-body ul, .ivy-entry-body .cv-bullet-list {
+    padding-left: 16px;
+    margin-top: 2px;
+}
+
+.ivy-entry-body li {
+    font-size: 10pt;
+    margin-bottom: 2px;
+    color: #333333;
+    line-height: 1.48;
+}
+
+.ivy-skills-block {
+    font-size: 10pt;
+    color: #333333;
+    line-height: 1.5;
+}
+
+.ivy-cert-list {
+    padding-left: 16px;
+    font-size: 10pt;
+    color: #333333;
+}
+
+.ivy-cert-list li {
+    margin-bottom: 2px;
+}
+
+.ivy-lang-line {
+    font-size: 10pt;
+    color: #333333;
+}
+
+/* ============================================================
+   2. MODERN ŞABLON (İki Sütunlu)
+   ============================================================ */
+.cv-template-modern {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    min-height: 297mm;
+}
+
+.modern-sidebar {
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.modern-avatar-wrap {
+    width: 105px;
+    height: 105px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.modern-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modern-side-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modern-side-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cv-primary);
+    border-bottom: 1.5px solid var(--cv-primary-light, #e2e8f0);
+    padding-bottom: 4px;
+}
+
+.modern-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modern-contact-item {
+    font-size: 11px;
+    color: #475569;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modern-contact-item svg {
+    flex-shrink: 0;
+    color: var(--cv-primary);
+}
+
+.modern-project-link {
+    color: var(--cv-primary);
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+}
+
+.modern-project-link:hover {
+    opacity: 0.75;
+}
+
+.modern-skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.modern-skill-tag {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.modern-lang-list,
+.modern-cert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modern-lang-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.modern-lang-name {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.modern-lang-level {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.modern-cert-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.3;
+}
+
+.modern-cert-sub {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.modern-main {
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modern-header {
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 16px;
+}
+
+.modern-fullname {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+}
+
+.modern-jobtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cv-primary);
+}
+
+.modern-main-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modern-main-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modern-main-title .title-bar {
+    width: 4px;
+    height: 14px;
+    background-color: var(--cv-primary);
+    border-radius: 2px;
+}
+
+.modern-summary-text {
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.modern-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.modern-timeline-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modern-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.modern-role {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.modern-company {
+    font-size: 11.5px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.modern-date-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--cv-primary);
+    background: var(--cv-primary-light, #eff6ff);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.modern-item-body {
+    font-size: 11.5px;
+    color: #334155;
+}
+
+.modern-projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.modern-project-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 12px;
+}
+
+.modern-project-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.modern-project-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.modern-project-desc {
+    font-size: 11px;
+    color: #475569;
+    line-height: 1.45;
+}
+
+/* ============================================================
+   3. ATS / KURUMSAL ŞABLON (Tek Sütunlu)
+   ============================================================ */
+.cv-template-ats {
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: #111827;
+}
+
+.ats-header {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.ats-name {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #000000;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.ats-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.ats-contact-bar {
+    font-size: 11px;
+    color: #4b5563;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+.ats-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ats-heading {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--cv-primary, #000000);
+    text-transform: uppercase;
+}
+
+.ats-divider {
+    height: 1.5px;
+    background-color: var(--cv-primary, #111827);
+    margin-bottom: 4px;
+}
+
+.ats-summary-text {
+    font-size: 11.5px;
+    color: #374151;
+    line-height: 1.55;
+    text-align: justify;
+}
+
+.ats-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ats-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ats-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 12px;
+}
+
+.ats-left-meta {
+    font-size: 12px;
+}
+
+.ats-role {
+    color: #000000;
+}
+
+.ats-company {
+    color: #374151;
+    font-weight: 600;
+}
+
+.ats-location {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.ats-date {
+    font-size: 11px;
+    font-weight: 600;
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+.ats-item-content {
+    font-size: 11px;
+    color: #374151;
+}
+
+.ats-skills-line {
+    font-size: 11.5px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.ats-cert-list {
+    margin: 2px 0 0 16px;
+    padding: 0;
+    font-size: 11px;
+    color: #374151;
+}
+
+/* ============================================================
+   4. MİNİMALİST ŞABLON (Zarif Editoryal)
+   ============================================================ */
+.cv-template-minimal {
+    padding: 38px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    color: #1e293b;
+}
+
+.minimal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 12px;
+}
+
+.minimal-name {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #0f172a;
+}
+
+.minimal-role {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--cv-primary);
+    margin-top: 2px;
+}
+
+.minimal-header-right {
+    text-align: right;
+    font-size: 10.5px;
+    color: #64748b;
+    line-height: 1.45;
+}
+
+.minimal-divider-main {
+    height: 1px;
+    background: #e2e8f0;
+    margin-bottom: 4px;
+}
+
+.minimal-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.minimal-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    text-transform: uppercase;
+    padding-top: 2px;
+}
+
+.minimal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.minimal-summary {
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.minimal-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.minimal-block-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.minimal-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.minimal-meta {
+    font-size: 10.5px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.minimal-subtitle {
+    font-size: 11.5px;
+    color: var(--cv-primary);
+    font-weight: 600;
+}
+
+.minimal-body {
+    font-size: 11.5px;
+    color: #475569;
+    margin-top: 3px;
+}
+
+.minimal-skills-text {
+    font-size: 11.5px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.minimal-inline-item {
+    font-size: 11.5px;
+    color: #334155;
+}
+
+/* ============================================================
+   Aralık & Kompaktlık Modifikatörleri ("Sayfaya Sığdır" Ayarı)
+   ============================================================ */
+.cv-compact-tight {
+    font-size: 11px !important;
+}
+.cv-compact-tight.cv-template-ivy {
+    padding: 24px 34px !important;
+    font-size: 9.5pt !important;
+    line-height: 1.4 !important;
+}
+.cv-compact-tight .ivy-section {
+    margin-bottom: 10px !important;
+}
+.cv-compact-tight .ivy-name {
+    font-size: 18pt !important;
+    margin-bottom: 3px !important;
+}
+.cv-compact-tight .modern-main {
+    padding: 20px 20px !important;
+    gap: 12px !important;
+}
+.cv-compact-tight .modern-sidebar {
+    padding: 20px 14px !important;
+    gap: 14px !important;
+}
+.cv-compact-tight .ats-section {
+    gap: 3px !important;
+}
+.cv-compact-tight .minimal-row {
+    padding-bottom: 6px !important;
+    gap: 10px !important;
+}
+
+.cv-compact-loose {
+    font-size: 14px !important;
+}
+.cv-compact-loose.cv-template-ivy {
+    padding: 44px 50px !important;
+    font-size: 11pt !important;
+    line-height: 1.65 !important;
+}
+.cv-compact-loose .ivy-section {
+    margin-bottom: 22px !important;
+}
+.cv-compact-loose .modern-main {
+    padding: 38px 32px !important;
+    gap: 24px !important;
+}
+
+/* ============================================================
+   Font Seçenekleri
+   ============================================================ */
+.font-inter { font-family: 'Inter', sans-serif !important; }
+.font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+.font-outfit { font-family: 'Outfit', sans-serif !important; }
+.font-merriweather { font-family: 'Merriweather', Georgia, serif !important; }
