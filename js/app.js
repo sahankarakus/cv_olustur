@@ -29,9 +29,10 @@ function initApp() {
     loadSavedData();
     checkUrlSharedData();
     setupEventListeners();
-    setupModalClosingListeners();
     populateFormFromData();
     applySettings();
+    buildColorPopover();
+    setupDismissBehavior();
     updateFormVisibilityForTemplate();
     renderPreview();
     updateCompleteness();
@@ -752,86 +753,8 @@ window.updateCertificateField = function(index, field, value) {
 };
 
 // ==========================================
-// Evrensel Kapatma (ESC Tuşu & Boş Alana Tıklama - Requirement 2)
+// Akordeon & Kart Açıp/Kapatma
 // ==========================================
-function setupModalClosingListeners() {
-    // 1. ESC tuşu ile açık modalleri ve açılır menüleri kapatma
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' || e.key === 'Esc') {
-            closeAllModals();
-            closeColorDropdown();
-        }
-    });
-
-    // 2. Modalin dışındaki boş alana (overlay üzerine) tıklandığında kapatma
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                overlay.classList.remove('active');
-            }
-        });
-    });
-
-    // 3. Renk açılır menüsü dışına tıklandığında menüyü kapatma
-    document.addEventListener('click', (e) => {
-        const wrap = document.querySelector('.color-dropdown-wrap');
-        const menu = document.getElementById('colorDropdownMenu');
-        if (wrap && menu && !wrap.contains(e.target)) {
-            menu.classList.remove('active');
-        }
-    });
-}
-
-window.closeAllModals = function() {
-    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
-};
-
-// ==========================================
-// Gelişmiş Vurgu Rengi Seçici (Requirement 3)
-// ==========================================
-window.toggleColorDropdown = function(event) {
-    if (event) event.stopPropagation();
-    const menu = document.getElementById('colorDropdownMenu');
-    if (menu) {
-        menu.classList.toggle('active');
-    }
-};
-
-window.closeColorDropdown = function() {
-    const menu = document.getElementById('colorDropdownMenu');
-    if (menu) menu.classList.remove('active');
-};
-
-window.setPrimaryColor = function(hexColor) {
-    appState.settings.primaryColor = hexColor;
-
-    // Header göstergesini güncelle
-    const indicator = document.querySelector('.color-indicator-preview');
-    if (indicator) indicator.style.backgroundColor = hexColor;
-
-    // Menüdeki aktif renk butonunu işaretle
-    document.querySelectorAll('.color-swatch-btn').forEach(btn => {
-        if (btn.dataset.color.toLowerCase() === hexColor.toLowerCase()) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-
-    // Özel renk inputunu da senkronize et
-    const customInput = document.getElementById('customColorInput');
-    if (customInput) customInput.value = hexColor;
-
-    renderPreview();
-    saveData();
-    closeColorDropdown();
-    showToast("Vurgu rengi güncellendi.", "info");
-};
-
-window.setCustomPrimaryColor = function(hexColor) {
-    if (!hexColor) return;
-    setPrimaryColor(hexColor);
-};
 window.toggleSection = function(headerEl) {
     const section = headerEl.closest('.editor-section');
     if (section) section.classList.toggle('collapsed');
@@ -1132,11 +1055,160 @@ window.copyShareUrl = function() {
 // ==========================================
 // Şablon Galerisi Modalı (Görsel Seçim)
 // ==========================================
+const TEMPLATE_META = [
+    {
+        id: 'ivy', name: 'Klasik ATS (Ivy League)',
+        badges: [['★ En Çok Önerilen', true], ['%100 ATS'], ['Fotoğrafsız']],
+        desc: 'Hukuk, finans, sağlık, mühendislik ve resmi kurumlar için altın standart.'
+    },
+    {
+        id: 'ats', name: 'Kurumsal ATS',
+        badges: [['Tek Sütun'], ['Resmi Format'], ['Fotoğrafsız']],
+        desc: 'Ortalanmış başlık, renkli bölüm çizgileri ve taranabilir kurumsal düzen.'
+    },
+    {
+        id: 'modern', name: 'Modern (İki Sütunlu)',
+        badges: [['Fotoğraflı', true], ['Renkli Kenar Çubuğu']],
+        desc: 'Teknoloji, pazarlama ve kreatif başvurular için görsel vurgulu tasarım.'
+    },
+    {
+        id: 'minimal', name: 'Minimalist Editoryal',
+        badges: [['Zarif Tipografi'], ['Ferah Alanlar'], ['Fotoğrafsız']],
+        desc: 'Mimarlık, tasarım, akademi ve danışmanlık için sade, şık düzen.'
+    }
+];
+
+function buildTemplateGallery() {
+    const grid = document.getElementById('templatesGalleryGrid');
+    if (!grid) return;
+
+    // Kullanıcının doldurduğu veri varsa onu, yoksa örnek veriyi göster
+    const d = appState.cvData;
+    const hasOwnData = d && d.personal && d.personal.fullName && (d.experience || []).length > 0;
+    const previewData = hasOwnData ? d : SECTOR_PROFILES.tech;
+
+    grid.innerHTML = TEMPLATE_META.map(t => `
+        <div class="template-card ${appState.settings.template === t.id ? 'active' : ''}" data-template="${t.id}" onclick="selectTemplateFromModal('${t.id}')">
+            <div class="template-live-preview">
+                <div class="template-live-inner ${appState.settings.fontFamily}" data-tpl="${t.id}"
+                     style="--cv-primary:${appState.settings.primaryColor}; --cv-primary-light:${hexToRgba(appState.settings.primaryColor, 0.12)};">
+                    ${TemplateEngine.render(t.id, previewData)}
+                </div>
+            </div>
+            <div class="template-card-info">
+                <div class="template-card-title">${t.name}</div>
+                <div class="template-badges-row">
+                    ${t.badges.map(b => `<span class="template-badge ${b[1] ? 'highlight' : ''}">${b[0]}</span>`).join('')}
+                </div>
+                <p class="template-desc">${t.desc}</p>
+            </div>
+        </div>
+    `).join('');
+
+    scaleTemplatePreviews();
+}
+
+function scaleTemplatePreviews() {
+    document.querySelectorAll('.template-live-preview').forEach(box => {
+        const inner = box.querySelector('.template-live-inner');
+        if (!inner || box.clientWidth === 0) return;
+        inner.style.transform = `scale(${box.clientWidth / 794})`;
+    });
+}
+
 window.openTemplateModal = function() {
     updateFormVisibilityForTemplate();
     const modal = document.getElementById('templateModal');
     if (modal) modal.classList.add('active');
+    buildTemplateGallery();
 };
+
+// ==========================================
+// Vurgu Rengi Seçici (Açılır Palet)
+// ==========================================
+const COLOR_GROUPS = [
+    { label: 'Nötr', colors: [['#000000','Siyah'],['#1f2937','Antrasit'],['#374151','Koyu Gri'],['#6b7280','Gri'],['#44403c','Kahve Gri'],['#78716c','Taş']] },
+    { label: 'Mavi & Turkuaz', colors: [['#1e3a8a','Lacivert'],['#1d4ed8','Kobalt'],['#2563eb','Safir'],['#0ea5e9','Gök Mavisi'],['#0891b2','Camgöbeği'],['#0d9488','Turkuaz']] },
+    { label: 'Yeşil', colors: [['#14532d','Orman'],['#166534','Koyu Yeşil'],['#059669','Zümrüt'],['#16a34a','Yeşil'],['#65a30d','Fıstık'],['#4d7c0f','Zeytin']] },
+    { label: 'Sıcak Tonlar', colors: [['#b91c1c','Kırmızı'],['#be123c','Bordo'],['#e11d48','Gül'],['#ea580c','Turuncu'],['#d97706','Kehribar'],['#ca8a04','Altın']] },
+    { label: 'Mor & Pembe', colors: [['#4c1d95','Patlıcan'],['#6d28d9','Mor'],['#7c3aed','Menekşe'],['#a21caf','Fuşya'],['#db2777','Pembe'],['#9d174d','Koyu Pembe']] }
+];
+
+function buildColorPopover() {
+    const wrap = document.getElementById('colorGroups');
+    if (!wrap) return;
+    wrap.innerHTML = COLOR_GROUPS.map(g => `
+        <div class="color-group">
+            <div class="color-group-label">${g.label}</div>
+            <div class="color-swatch-row">
+                ${g.colors.map(c => `<span class="color-swatch" data-color="${c[0]}" title="${c[1]}" style="background:${c[0]}"></span>`).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    wrap.querySelectorAll('.color-swatch').forEach(s => {
+        s.addEventListener('click', () => setPrimaryColor(s.dataset.color));
+    });
+
+    const custom = document.getElementById('customColorInput');
+    if (custom) custom.addEventListener('input', e => setPrimaryColor(e.target.value));
+
+    updateColorUI();
+}
+
+function updateColorUI() {
+    const color = appState.settings.primaryColor;
+    const swatch = document.getElementById('colorPickerSwatch');
+    if (swatch) swatch.style.setProperty('--swatch', color);
+    document.querySelectorAll('.color-swatch').forEach(s => {
+        s.classList.toggle('active', s.dataset.color.toLowerCase() === color.toLowerCase());
+    });
+    const custom = document.getElementById('customColorInput');
+    if (custom && /^#[0-9a-f]{6}$/i.test(color)) custom.value = color;
+    const hex = document.getElementById('customColorHex');
+    if (hex) hex.textContent = color.toUpperCase();
+}
+
+function setPrimaryColor(color) {
+    appState.settings.primaryColor = color;
+    updateColorUI();
+    renderPreview();
+    saveData();
+}
+
+window.toggleColorPopover = function(event) {
+    if (event) event.stopPropagation();
+    const pop = document.getElementById('colorPopover');
+    if (pop) pop.classList.toggle('open');
+};
+
+// ==========================================
+// Pencereleri Kapatma: ESC & Boş Alana Tıklama
+// ==========================================
+function setupDismissBehavior() {
+    // Boş alana (overlay'e) tıklayınca modalı kapat
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('mousedown', (e) => {
+            if (e.target === overlay) overlay.classList.remove('active');
+        });
+    });
+
+    // ESC: açık modalları ve renk paletini kapat
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+        const pop = document.getElementById('colorPopover');
+        if (pop) pop.classList.remove('open');
+    });
+
+    // Palet dışına tıklayınca paleti kapat
+    document.addEventListener('click', () => {
+        const pop = document.getElementById('colorPopover');
+        if (pop) pop.classList.remove('open');
+    });
+
+    window.addEventListener('resize', scaleTemplatePreviews);
+}
 
 window.selectTemplateFromModal = function(templateId) {
     appState.settings.template = templateId;
@@ -1369,23 +1441,18 @@ function setupEventListeners() {
 }
 
 function applySettings() {
-    // Aktif renk swatch'ı ve göstergeyi senkronize et
-    const activeColor = appState.settings.primaryColor || '#0f172a';
-    const indicator = document.querySelector('.color-indicator-preview');
-    if (indicator) indicator.style.backgroundColor = activeColor;
+    const activeTplBtn = document.querySelector(`.template-btn[data-template="${appState.settings.template}"]`);
+    if (activeTplBtn) {
+        document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+        activeTplBtn.classList.add('active');
+    }
 
-    document.querySelectorAll('.color-swatch-btn').forEach(btn => {
-        if (btn.dataset.color && btn.dataset.color.toLowerCase() === activeColor.toLowerCase()) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
+    const activeDot = document.querySelector(`.color-dot[data-color="${appState.settings.primaryColor}"]`);
+    if (activeDot) {
+        document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+        activeDot.classList.add('active');
+    }
 
-    const customInput = document.getElementById('customColorInput');
-    if (customInput) customInput.value = activeColor;
-
-    // Font seçimi
     const fontSelect = document.getElementById('fontSelector');
     if (fontSelect && appState.settings.fontFamily) {
         fontSelect.value = appState.settings.fontFamily;
