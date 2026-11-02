@@ -1,0 +1,32 @@
+# Çıktı ve Test Dosyaları
+*.pdf
+*.PDF
+
+# İşletim Sistemi Dosyaları
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# IDE ve Editör Ayarları
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# Loglar ve Geçici Dosyalar
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.tmp/
+temp/
+
+# Ortam değişkenleri (varsa)
+.env
+.env.local
+.env.*.local
+
+# Node bağımlılıkları (ileride npm kullanılırsa)
+node_modules/

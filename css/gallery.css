@@ -1,31 +1,28 @@
 /* ============================================================
    CVZirve - Şablon Galerisi (Gerçek Canlı Önizleme) & Renk Seçici
+   (Craft Docs / Linear "Stone" Estetiği)
    ============================================================ */
 
 /* ---------- Şablon galerisi ---------- */
 #templateModal .modal-card {
-    max-width: 920px;
+    max-width: 880px;
 }
 
 .templates-gallery-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-}
-
-.template-card {
-    padding: 12px;
-    gap: 12px;
+    gap: 16px;
 }
 
 /* Gerçek şablonun küçültülmüş canlı görüntüsü */
 .template-live-preview {
     position: relative;
-    height: 330px;
+    height: 310px;
     background: #ffffff;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--stone-200);
+    box-shadow: var(--shadow-subtle);
     pointer-events: none;
     user-select: none;
 }
@@ -43,27 +40,61 @@
     min-height: 1123px;
 }
 
-/* Alt kısmı yumuşakça solduran gradyan: "sayfa devam ediyor" hissi */
+/* Alt kısmı yumuşakça solduran gradyan */
 .template-live-preview::after {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 46px;
+    height: 42px;
     background: linear-gradient(to bottom, rgba(255,255,255,0), #ffffff);
 }
 
-.template-card-title {
-    font-size: 0.95rem;
-}
-
 .template-card.active .template-live-preview {
-    box-shadow: 0 0 0 2px var(--accent-blue), 0 6px 18px rgba(0, 0, 0, 0.35);
+    border-color: var(--stone-900);
 }
 
 .template-card.active::after {
-    z-index: 3;
+    z-index: 10;
+}
+
+/* Şablon Kartı Üzerindeki Fotoğraf/Görsel Rozeti */
+.template-photo-pill {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 8;
+    display: inline-flex;
+    align-items: center;
+    gap: 4.5px;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+    transition: transform var(--transition-fast);
+}
+
+.template-photo-pill.photo-yes {
+    background: #047857;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.template-photo-pill.photo-no {
+    background: rgba(248, 250, 252, 0.94);
+    color: #475569;
+    border: 1px solid rgba(203, 213, 225, 0.85);
+}
+
+/* Fotoğraf Destekli Alt Rozet */
+.template-badge.badge-photo {
+    background: #ecfdf5;
+    color: #047857;
+    border-color: #a7f3d0;
+    font-weight: 600;
 }
 
 /* ---------- Renk seçici ---------- */
@@ -72,80 +103,86 @@
 }
 
 .color-btn-swatch {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--swatch, #2563eb);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: var(--swatch, #191917);
+    border: 1px solid rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
 
 .color-popover {
+    display: none;
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 8px);
     right: 0;
-    width: 300px;
-    background: var(--bg-surface);
-    border: 1px solid var(--glass-border);
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.65);
+    width: 276px;
+    background: #ffffff;
+    border: 1px solid var(--stone-200);
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: var(--shadow-popover);
     z-index: 80;
-    opacity: 0;
-    transform: translateY(-6px) scale(0.98);
-    pointer-events: none;
-    transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .color-popover.open {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+    display: block;
+    animation: popoverFadeIn var(--transition-fast) ease-out;
+}
+
+@keyframes popoverFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .color-popover-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--stone-900);
+    margin-bottom: 10px;
 }
 
 .color-group + .color-group {
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 .color-group-label {
-    font-size: 0.68rem;
-    font-weight: 700;
+    font-size: 10px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    color: var(--stone-400);
+    margin-bottom: 5px;
 }
 
 .color-swatch-row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
+    gap: 6px;
 }
 
 .color-swatch {
     aspect-ratio: 1;
-    border-radius: 8px;
-    border: 2px solid transparent;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
     cursor: pointer;
     position: relative;
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .color-swatch:hover {
-    transform: scale(1.12);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
 }
 
 .color-swatch.active {
-    border-color: #ffffff;
-    box-shadow: 0 0 0 2px var(--accent-blue);
+    border-color: var(--stone-900);
+    box-shadow: 0 0 0 1.5px #ffffff inset;
 }
 
 .color-swatch.active::after {
@@ -156,47 +193,41 @@
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .color-custom-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border-subtle);
-    font-size: 0.78rem;
-    color: var(--text-secondary);
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--stone-150);
+    font-size: 11.5px;
+    color: var(--stone-600);
 }
 
 .color-custom-row label {
     flex: 1;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .color-custom-row input[type="color"] {
-    width: 36px;
-    height: 28px;
+    width: 32px;
+    height: 24px;
     padding: 0;
-    border: 1px solid var(--border-subtle);
-    border-radius: 6px;
+    border: 1px solid var(--stone-200);
+    border-radius: 4px;
     background: transparent;
     cursor: pointer;
 }
 
 .color-hex {
-    font-family: ui-monospace, monospace;
-    font-size: 0.74rem;
-    color: var(--text-primary);
-    min-width: 62px;
-}
-
-.color-picker-wrap.disabled .header-pill-btn {
-    opacity: 0.45;
-    pointer-events: none;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--stone-800);
+    min-width: 58px;
 }
 
 @media (max-width: 760px) {

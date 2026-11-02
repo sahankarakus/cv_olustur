@@ -27,11 +27,14 @@
     /* Arayüz elemanlarını gizle */
     .app-header,
     .editor-panel,
+    .preview-desk-header,
     .mobile-view-tabs,
     .preview-toolbar,
     .page-info-tag,
     .page-break-line,
-    .toast-container {
+    .workspace-resizer,
+    .toast-container,
+    .modal-overlay {
         display: none !important;
     }
 
@@ -64,6 +67,7 @@
     }
 
     .cv-paper {
+        position: relative !important;
         width: 210mm !important;
         min-height: 297mm !important;
         box-shadow: none !important;
@@ -71,6 +75,12 @@
         border-radius: 0 !important;
         margin: 0 !important;
         padding: 0 !important;
+        transform: none !important;
+    }
+
+    .cv-link {
+        color: inherit !important;
+        text-decoration: none !important;
     }
 
     /* Sayfa kesilmelerini (page-break) önleme */

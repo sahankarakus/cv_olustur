@@ -451,43 +451,47 @@
 }
 
 /* ============================================================
-   3. ATS / KURUMSAL ŞABLON (Tek Sütunlu)
+   3. ATS / KURUMSAL ŞABLON (Tek Sütunlu - Craft Editorial Look)
    ============================================================ */
 .cv-template-ats {
-    padding: 32px 36px;
+    padding: 40px 44px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    color: #111827;
+    color: #191917;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .ats-header {
     text-align: center;
-    margin-bottom: 6px;
+    padding-bottom: 16px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid #d4d4ce;
 }
 
 .ats-name {
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    color: #000000;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #191917;
     text-transform: uppercase;
     margin-bottom: 4px;
 }
 
 .ats-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    color: #374151;
-    margin-bottom: 6px;
+    color: #3f3f3a;
+    margin-bottom: 8px;
 }
 
 .ats-contact-bar {
     font-size: 11px;
-    color: #4b5563;
+    color: #52524c;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 6px;
 }
 
@@ -498,23 +502,23 @@
 }
 
 .ats-heading {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    color: var(--cv-primary, #000000);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--cv-primary, #191917);
     text-transform: uppercase;
 }
 
 .ats-divider {
-    height: 1.5px;
-    background-color: var(--cv-primary, #111827);
+    height: 1px;
+    background-color: var(--cv-primary, #272724);
     margin-bottom: 4px;
 }
 
 .ats-summary-text {
-    font-size: 11.5px;
-    color: #374151;
-    line-height: 1.55;
+    font-size: 11px;
+    color: #3f3f3a;
+    line-height: 1.6;
     text-align: justify;
 }
 
@@ -534,51 +538,54 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-size: 12px;
+    font-size: 11.5px;
 }
 
 .ats-left-meta {
-    font-size: 12px;
+    font-size: 11.5px;
 }
 
 .ats-role {
-    color: #000000;
+    color: #191917;
+    font-weight: 700;
 }
 
 .ats-company {
-    color: #374151;
-    font-weight: 600;
+    color: #3f3f3a;
+    font-weight: 400;
 }
 
 .ats-location {
-    color: #6b7280;
-    font-size: 11px;
+    color: #73736b;
+    font-size: 10.5px;
+    font-weight: 400;
 }
 
 .ats-date {
-    font-size: 11px;
-    font-weight: 600;
-    color: #4b5563;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: #52524c;
     white-space: nowrap;
 }
 
 .ats-item-content {
     font-size: 11px;
-    color: #374151;
+    color: #3f3f3a;
 }
 
 .ats-skills-line {
-    font-size: 11.5px;
-    color: #374151;
-    line-height: 1.5;
+    font-size: 11px;
+    color: #3f3f3a;
+    line-height: 1.55;
 }
 
 .ats-cert-list {
     margin: 2px 0 0 16px;
     padding: 0;
     font-size: 11px;
-    color: #374151;
+    color: #3f3f3a;
 }
+
 
 /* ============================================================
    4. MİNİMALİST ŞABLON (Zarif Editoryal)
@@ -758,3 +765,47 @@
 .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
 .font-outfit { font-family: 'Outfit', sans-serif !important; }
 .font-merriweather { font-family: 'Merriweather', Georgia, serif !important; }
+
+/* ============================================================
+   Tıklanabilir CV Bağlantıları (Mail, Tel, Web, LinkedIn, vb.)
+   ============================================================ */
+.cv-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    cursor: pointer;
+}
+
+.cv-link:hover {
+    color: var(--cv-primary, #0284c7);
+    text-decoration: underline;
+}
+
+a.ivy-contact-item,
+a.modern-contact-item {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+}
+
+a.ivy-contact-item:hover,
+a.modern-contact-item:hover {
+    color: var(--cv-primary, #0284c7);
+}
+
+a.ivy-contact-item:hover span,
+a.modern-contact-item:hover span {
+    text-decoration: underline;
+}
+
+.ats-contact a.cv-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.ats-contact a.cv-link:hover {
+    color: var(--cv-primary, #0284c7);
+    text-decoration: underline;
+}
+

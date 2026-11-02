@@ -1,48 +1,67 @@
 /* ============================================================
    CVZirve - Ana Tasarım Sistemi & Düzen Stilleri
+   (Craft Docs / Linear "Stone" Estetiği)
    ============================================================ */
 
 :root {
-    /* Renk Paleti (Koyu Stüdyo Arayüzü + Canlı A4 Kağıdı) */
-    --bg-app: #0f172a;
-    --bg-surface: #1e293b;
-    --bg-surface-elevated: #334155;
-    --bg-input: #0b1120;
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-focus: #3b82f6;
+    /* Stone Renk Paleti */
+    --stone-25: #fcfcfb;
+    --stone-50: #f9f9f8;
+    --stone-100: #f4f4f2;
+    --stone-150: #ecece9;
+    --stone-200: #e5e5e1;
+    --stone-300: #d4d4ce;
+    --stone-400: #a3a39b;
+    --stone-500: #73736b;
+    --stone-600: #52524c;
+    --stone-700: #3f3f3a;
+    --stone-800: #272724;
+    --stone-900: #191917;
+    --stone-950: #0f0f0e;
 
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    /* Semantik Arayüz Değişkenleri */
+    --bg-app: var(--stone-50);
+    --bg-surface: #ffffff;
+    --bg-surface-subtle: var(--stone-25);
+    --bg-surface-elevated: var(--stone-100);
+    --bg-input: #ffffff;
+    --border-subtle: #e5e5e1;
+    --border-light: #ecece9;
+    --border-input: #e7e7e3;
+    --border-hover: #d1d1ca;
+    --border-focus: #191917;
+
+    --text-primary: var(--stone-900);
+    --text-secondary: var(--stone-600);
+    --text-muted: var(--stone-500);
+    --text-faint: var(--stone-400);
 
     /* Vurgu Renkleri */
-    --accent-blue: #3b82f6;
-    --accent-blue-hover: #2563eb;
+    --accent-primary: #191917;
+    --accent-primary-hover: #272724;
+    --accent-blue: #2563eb;
     --accent-emerald: #10b981;
-    --accent-rose: #f43f5e;
-    --accent-indigo: #6366f1;
+    --accent-rose: #e11d48;
 
     /* Tipografi */
-    --font-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-    /* Gölgeler & Cam Efekti */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-    --shadow-paper: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    
-    --glass-bg: rgba(30, 41, 59, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-blur: blur(12px);
+    /* Gölgeler */
+    --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-2xs: 0 1px 1px 0 rgba(0, 0, 0, 0.04);
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-paper: 0 12px 36px -8px rgba(15, 23, 42, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    --shadow-popover: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --shadow-dock: 0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
 
     /* Geçişler */
-    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-base: 220ms cubic-bezier(0.16, 1, 0.3, 1);
 
     /* CV Dinamik Değişkenleri (Önizleme Kağıdı İçin) */
-    --cv-primary: #2563eb;
-    --cv-primary-light: rgba(37, 99, 235, 0.1);
+    --cv-primary: #191917;
+    --cv-primary-light: rgba(25, 25, 23, 0.08);
     --cv-font: 'Inter', sans-serif;
 }
 
@@ -51,6 +70,36 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+/* ============================================================
+   İnce Kaydırma Çubukları (macOS / Linear Stili)
+   ============================================================ */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #e2e2dd transparent;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e2e2dd;
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #c7c7be;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 html, body {
@@ -62,241 +111,363 @@ html, body {
     font-family: var(--font-ui);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    user-select: none;
 }
 
 /* ============================================================
-   Üst Gezinme Çubuğu (Header / Navbar)
+   Üst Gezinme Çubuğu (Navigation Chrome - Craft / Linear Stili)
    ============================================================ */
 .app-header {
-    height: 64px;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    border-bottom: 1px solid var(--glass-border);
+    height: 52px;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(229, 229, 225, 0.85);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 20px;
     z-index: 50;
-    position: relative;
+    flex-shrink: 0;
 }
 
+/* Sol: Marka & Kayıt Durumu */
 .header-brand {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
+.brand-identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .brand-logo-badge {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--stone-900);
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+    box-shadow: var(--shadow-xs);
 }
 
 .brand-logo-badge svg {
-    width: 22px;
-    height: 22px;
-    color: #ffffff;
-}
-
-.brand-text-wrap {
-    display: flex;
-    flex-direction: column;
+    width: 14px;
+    height: 14px;
+    color: var(--stone-200);
 }
 
 .brand-title {
-    font-size: 1.15rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-size: 13.5px;
+    font-weight: 550;
+    letter-spacing: -0.015em;
+    color: var(--stone-900);
 }
 
-.brand-subtitle {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    font-weight: 500;
+.header-divider {
+    width: 1px;
+    height: 14px;
+    background: var(--stone-200);
 }
 
-/* Header Orta Kontroller (Sadeleştirilmiş Butonlar) */
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.header-pill-btn {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all var(--transition-fast);
-}
-
-.header-pill-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-}
-
-.header-pill-btn.primary-pill {
-    background: rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.35);
-    color: #93c5fd;
-}
-
-.header-pill-btn.primary-pill:hover {
-    background: rgba(59, 130, 246, 0.25);
-    border-color: var(--accent-blue);
-    color: #ffffff;
-}
-
-.header-pill-btn svg {
-    width: 15px;
-    height: 15px;
-}
-
-/* Header Sağ Eylemler */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.control-group-mini {
+.save-status-indicator {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(15, 23, 42, 0.6);
-    padding: 4px 8px;
-    border-radius: 8px;
-    border: 1px solid var(--border-subtle);
+    font-size: 11.5px;
+    color: var(--stone-500);
+    font-weight: 400;
 }
 
-/* Renk Seçici Hapları */
-.color-picker {
+.save-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--stone-400);
+    transition: background var(--transition-fast);
+}
+
+.save-status-indicator.is-saving .save-status-dot {
+    background: #10b981;
+}
+
+/* Orta: İşlevsel Araçlar */
+.header-controls {
     display: flex;
-    gap: 5px;
     align-items: center;
-    padding: 0 2px;
+    gap: 8px;
+    font-size: 12px;
 }
 
-.color-dot {
+.header-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 450;
+    font-family: inherit;
+    color: var(--stone-700);
+    background: #ffffff;
+    border: 1px solid var(--stone-200);
+    border-radius: 6px;
+    box-shadow: var(--shadow-subtle);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    line-height: 1.2;
+}
+
+.header-pill-btn:hover {
+    color: var(--stone-900);
+    background: rgba(244, 244, 242, 0.75);
+    border-color: var(--stone-300);
+}
+
+.header-pill-btn svg {
+    width: 14px;
+    height: 14px;
+    color: var(--stone-400);
+    flex-shrink: 0;
+}
+
+.header-pill-btn .pill-muted-prefix {
+    color: var(--stone-400);
+    font-weight: 400;
+}
+
+.header-pill-btn .pill-strong-label {
+    color: var(--stone-800);
+    font-weight: 500;
+}
+
+/* Dil Değiştirici (TR / EN Segmented) */
+.lang-segmented {
+    display: flex;
+    align-items: center;
+    background: var(--stone-100);
+    padding: 2px;
+    border-radius: 6px;
+    border: 1px solid rgba(229, 229, 225, 0.85);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.lang-seg-btn {
+    border: none;
+    background: transparent;
+    color: var(--stone-500);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    line-height: 1.35;
+}
+
+.lang-seg-btn:hover {
+    color: var(--stone-800);
+}
+
+.lang-seg-btn.active {
+    background: #ffffff;
+    color: var(--stone-900);
+    font-weight: 600;
+    box-shadow: var(--shadow-2xs);
+}
+
+/* ATS Skor Göstergesi (Minimalist Bar + Yüzde) */
+.ats-metric-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(244, 244, 242, 0.85);
+    border: 1px solid var(--stone-200);
+    color: var(--stone-700);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.ats-metric-pill:hover {
+    background: var(--stone-150);
+    border-color: var(--stone-300);
+}
+
+.ats-metric-label {
+    font-size: 11px;
+    color: var(--stone-500);
+    font-weight: 450;
+}
+
+.ats-metric-track {
+    width: 48px;
+    height: 6px;
+    background: var(--stone-200);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.ats-metric-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--stone-900);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.ats-metric-value {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--stone-900);
+}
+
+/* Sağ: Eylem Butonları */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.icon-utility-btn {
+    padding: 6px;
+    color: var(--stone-500);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.icon-utility-btn:hover {
+    color: var(--stone-800);
+    background: var(--stone-100);
+}
+
+.icon-utility-btn svg {
     width: 16px;
     height: 16px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform var(--transition-fast), border-color var(--transition-fast);
-}
-
-.color-dot:hover {
-    transform: scale(1.18);
-}
-
-.color-dot.active {
-    border-color: #ffffff;
-    transform: scale(1.22);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-}
-
-/* ============================================================
-   Ana Çalışma Alanı (Form Paneli & Rahat Önizleme)
-   ============================================================ */
-.app-workspace {
-    display: grid;
-    grid-template-columns: 570px 1fr;
-    height: calc(100vh - 64px);
-    width: 100vw;
-    overflow: hidden;
 }
 
 .btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    font-weight: 600;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
     cursor: pointer;
     border: 1px solid transparent;
     transition: all var(--transition-fast);
     text-decoration: none;
+    line-height: 1.25;
 }
 
 .btn svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
 }
 
 .btn-ghost {
-    background: transparent;
-    color: var(--text-secondary);
-    border-color: var(--border-subtle);
+    background: #ffffff;
+    color: var(--stone-700);
+    border-color: var(--stone-200);
+    box-shadow: var(--shadow-subtle);
 }
 
 .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.07);
-    color: var(--text-primary);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: var(--stone-100);
+    color: var(--stone-900);
+    border-color: var(--stone-300);
 }
 
+.btn-ghost.danger:hover {
+    color: var(--accent-rose);
+    border-color: rgba(225, 29, 72, 0.3);
+    background: rgba(225, 29, 72, 0.05);
+}
+
+/* Ana Buton: Artisan Charcoal Pill */
 .btn-primary {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    margin-left: 4px;
+    padding: 6px 14px;
+    background: var(--stone-900);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    border: 1px solid var(--stone-800);
+    box-shadow: var(--shadow-xs);
+    font-weight: 500;
+}
+
+.btn-primary svg {
+    color: var(--stone-300);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.55);
-    transform: translateY(-1px);
+    background: var(--stone-800);
 }
 
-.btn-emerald {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    color: #ffffff;
-}
-
-.btn-emerald:hover {
-    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+.btn-primary:active {
+    background: #000000;
 }
 
 /* ============================================================
-   Ana Çalışma Alanı (İki Sütun: Sol Form, Sağ Önizleme)
+   Ana Çalışma Alanı (Sol Editör 45%, Sağ A4 Önizleme 55%)
    ============================================================ */
 .app-workspace {
     display: grid;
-    grid-template-columns: 520px 1fr;
-    height: calc(100vh - 64px);
+    grid-template-columns: minmax(360px, 45%) 1px 1fr;
+    height: calc(100vh - 52px);
     width: 100vw;
     overflow: hidden;
+    position: relative;
 }
 
-/* Mobil / Tablet Görünüm Değiştirici Sekmeler */
-.mobile-view-tabs {
-    display: none;
+/* Sürüklenebilir Panel Ayırıcı (Splitter) */
+.workspace-resizer {
+    width: 1px;
+    height: 100%;
+    background: rgba(229, 229, 225, 0.85);
+    cursor: col-resize;
+    position: relative;
+    z-index: 40;
+    user-select: none;
+    transition: background var(--transition-fast);
+}
+
+.workspace-resizer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -3px;
+    right: -3px;
+    background: transparent;
+}
+
+.workspace-resizer:hover,
+.workspace-resizer.is-resizing {
+    background: var(--stone-900);
+    box-shadow: 0 0 0 1px var(--stone-900);
 }
 
 /* ============================================================
-   Bildirim / Toast ve Modal Stilleri
+   Bildirim / Toast Stilleri (Craft Light Stili)
    ============================================================ */
 .toast-container {
     position: fixed;
-    bottom: 24px;
+    bottom: 64px;
     right: 24px;
     z-index: 9999;
     display: flex;
@@ -306,33 +477,33 @@ html, body {
 }
 
 .toast {
-    background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
+    background: var(--stone-900);
+    border: 1px solid var(--stone-800);
     color: #ffffff;
-    padding: 12px 18px;
+    padding: 9px 14px;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: 12px;
     font-weight: 500;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-popover);
     display: flex;
     align-items: center;
-    gap: 10px;
-    transform: translateY(20px);
+    gap: 8px;
+    transform: translateY(12px);
     opacity: 0;
-    animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: toastIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     pointer-events: auto;
 }
 
 .toast.toast-success {
-    border-left: 4px solid var(--accent-emerald);
+    border-left: 3px solid #10b981;
 }
 
 .toast.toast-info {
-    border-left: 4px solid var(--accent-blue);
+    border-left: 3px solid var(--stone-400);
 }
 
 .toast.toast-warn {
-    border-left: 4px solid #f59e0b;
+    border-left: 3px solid #f59e0b;
 }
 
 @keyframes toastIn {
@@ -343,16 +514,13 @@ html, body {
 }
 
 /* ============================================================
-   Evrensel Modal & Dialog Stilleri
+   Evrensel Modal & Dialog Stilleri (Craft Light Theme)
    ============================================================ */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(8px);
+    inset: 0;
+    background: rgba(25, 25, 23, 0.35);
+    backdrop-filter: blur(4px);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -369,17 +537,17 @@ html, body {
 }
 
 .modal-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid var(--stone-200);
+    border-radius: 12px;
     width: 100%;
     max-width: 620px;
     max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
     display: flex;
     flex-direction: column;
-    transform: scale(0.95);
+    transform: scale(0.97);
     transition: transform var(--transition-fast);
 }
 
@@ -388,59 +556,57 @@ html, body {
 }
 
 .modal-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border-subtle);
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--stone-150);
+    background: var(--stone-25);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .modal-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--stone-900);
+    letter-spacing: -0.01em;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .modal-close-btn {
     background: transparent;
     border: none;
-    color: var(--text-muted);
-    font-size: 1.2rem;
+    color: var(--stone-400);
+    font-size: 14px;
     cursor: pointer;
-    padding: 4px;
+    width: 26px;
+    height: 26px;
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all var(--transition-fast);
 }
 
 .modal-close-btn:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--stone-900);
+    background: var(--stone-100);
 }
 
 .modal-body {
-    padding: 20px 24px;
+    padding: 20px 22px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
-/* Şablon Galerisi Grid & Minyatür Önizleme */
-.templates-gallery-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
+/* Şablon Galerisi Kartları */
 .template-card {
-    background: rgba(15, 23, 42, 0.6);
-    border: 2px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 14px;
+    background: var(--stone-25);
+    border: 1.5px solid var(--stone-200);
+    border-radius: 10px;
+    padding: 12px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -450,14 +616,14 @@ html, body {
 }
 
 .template-card:hover {
-    border-color: var(--accent-blue);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
+    border-color: var(--stone-400);
+    background: #ffffff;
+    box-shadow: var(--shadow-popover);
 }
 
 .template-card.active {
-    border-color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.08);
+    border-color: var(--stone-900);
+    background: #ffffff;
 }
 
 .template-card.active::after {
@@ -465,58 +631,13 @@ html, body {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: var(--accent-blue);
+    background: var(--stone-900);
     color: #ffffff;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
     padding: 2px 8px;
     border-radius: 999px;
 }
-
-/* Şablon Minyatür Mockup Çizimleri */
-.template-mock-preview {
-    height: 120px;
-    background: #ffffff;
-    border-radius: 6px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    overflow: hidden;
-    user-select: none;
-    pointer-events: none;
-}
-
-/* 1. Ivy League Minyatür */
-.mock-ivy .mock-name { height: 7px; width: 45%; background: #1a1a1a; border-radius: 2px; }
-.mock-ivy .mock-contacts { height: 3px; width: 85%; background: #94a3b8; border-radius: 1px; }
-.mock-ivy .mock-line { height: 1.5px; width: 100%; background: #1a1a1a; margin: 2px 0; }
-.mock-ivy .mock-sec-title { height: 4px; width: 25%; background: #1a1a1a; border-bottom: 0.5px solid #ccc; margin-top: 3px; }
-.mock-ivy .mock-row { display: flex; justify-content: space-between; margin-top: 2px; }
-.mock-ivy .mock-text-bold { height: 4px; width: 40%; background: #334155; }
-.mock-ivy .mock-text-date { height: 3px; width: 20%; background: #94a3b8; }
-.mock-ivy .mock-para { height: 3px; width: 90%; background: #cbd5e1; margin-top: 2px; }
-
-/* 2. Modern İki Sütun Minyatür */
-.mock-modern { display: grid !important; grid-template-columns: 32% 1fr; gap: 6px; padding: 0 !important; }
-.mock-modern .mock-sidebar { background: #f1f5f9; padding: 8px; display: flex; flex-direction: column; gap: 4px; }
-.mock-modern .mock-avatar { width: 18px; height: 18px; border-radius: 50%; background: #cbd5e1; margin-bottom: 4px; }
-.mock-modern .mock-side-pill { height: 3px; width: 80%; background: #94a3b8; }
-.mock-modern .mock-main { padding: 8px; display: flex; flex-direction: column; gap: 4px; }
-.mock-modern .mock-main-name { height: 7px; width: 60%; background: #0f172a; }
-.mock-modern .mock-main-sub { height: 4px; width: 40%; background: var(--accent-blue); }
-
-/* 3. Kurumsal ATS Minyatür */
-.mock-ats { text-align: center; }
-.mock-ats .mock-name-center { height: 6px; width: 50%; background: #000; margin: 0 auto; }
-.mock-ats .mock-cont-center { height: 3px; width: 75%; background: #64748b; margin: 3px auto; }
-.mock-ats .mock-sec-head { height: 4px; width: 30%; background: #000; border-bottom: 1px solid #000; margin-top: 5px; }
-
-/* 4. Minimalist Minyatür */
-.mock-minimal { display: flex; flex-direction: column; gap: 5px; }
-.mock-minimal .mock-head-split { display: flex; justify-content: space-between; border-bottom: 0.5px solid #e2e8f0; padding-bottom: 4px; }
-.mock-minimal .mock-rows-grid { display: grid; grid-template-columns: 25% 1fr; gap: 4px; }
 
 .template-card-info {
     display: flex;
@@ -525,9 +646,9 @@ html, body {
 }
 
 .template-card-title {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--stone-900);
 }
 
 .template-badges-row {
@@ -537,42 +658,50 @@ html, body {
 }
 
 .template-badge {
-    font-size: 0.68rem;
-    font-weight: 600;
+    font-size: 10.5px;
+    font-weight: 500;
     padding: 2px 6px;
     border-radius: 4px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-muted);
+    background: var(--stone-100);
+    color: var(--stone-600);
+    border: 1px solid var(--stone-200);
 }
 
 .template-badge.highlight {
-    background: rgba(16, 185, 129, 0.15);
-    color: #6ee7b7;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background: var(--stone-900);
+    color: #ffffff;
+    border-color: var(--stone-900);
 }
 
 .template-desc {
-    font-size: 0.74rem;
-    color: var(--text-secondary);
-    line-height: 1.35;
+    font-size: 11.5px;
+    color: var(--stone-500);
+    line-height: 1.4;
+}
+
+/* Sektör Seçici Grid */
+.sector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
 .sector-card {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 14px;
+    background: var(--stone-25);
+    border: 1px solid var(--stone-200);
+    border-radius: 8px;
+    padding: 12px 14px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     transition: all var(--transition-fast);
 }
 
 .sector-card:hover {
-    border-color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.08);
-    transform: translateY(-2px);
+    border-color: var(--stone-900);
+    background: #ffffff;
+    box-shadow: var(--shadow-subtle);
 }
 
 .sector-card-top {
@@ -582,37 +711,37 @@ html, body {
 }
 
 .sector-icon {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 
 .sector-name {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--stone-900);
 }
 
 .sector-desc {
-    font-size: 0.76rem;
-    color: var(--text-muted);
+    font-size: 11.5px;
+    color: var(--stone-500);
     line-height: 1.35;
 }
 
-/* ATS Skor Göstergeleri */
+/* ATS Skor Modal Göstergeleri */
 .ats-score-hero {
     display: flex;
     align-items: center;
-    gap: 20px;
-    background: rgba(15, 23, 42, 0.5);
-    padding: 18px;
-    border-radius: 12px;
-    border: 1px solid var(--border-subtle);
+    gap: 18px;
+    background: var(--stone-50);
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid var(--stone-200);
 }
 
 .ats-score-circle {
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    background: conic-gradient(var(--accent-emerald) calc(var(--score-pct, 85) * 1%), rgba(255,255,255,0.1) 0);
+    background: conic-gradient(var(--stone-900) calc(var(--score-pct, 85) * 1%), var(--stone-200) 0);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -620,66 +749,74 @@ html, body {
 }
 
 .ats-score-inner {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: var(--bg-surface);
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--stone-900);
 }
 
 .ats-score-details h4 {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--stone-900);
     margin-bottom: 4px;
 }
 
 .ats-score-details p {
-    font-size: 0.78rem;
-    color: var(--text-secondary);
-    line-height: 1.4;
+    font-size: 12px;
+    color: var(--stone-500);
+    line-height: 1.45;
 }
 
 .ats-checklist {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .ats-check-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 0.82rem;
-    color: var(--text-secondary);
-    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--stone-700);
+    padding: 9px 12px;
     border-radius: 6px;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--stone-50);
+    border: 1px solid var(--stone-200);
 }
 
-.ats-check-item.passed svg { color: var(--accent-emerald); }
+.ats-check-item svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.ats-check-item.passed svg { color: #10b981; }
 .ats-check-item.failed svg { color: var(--accent-rose); }
 
 /* QR ve Link Paylaşım Alanı */
 .share-link-box {
     display: flex;
     gap: 8px;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .share-link-input {
     flex: 1;
-    background: var(--bg-input);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 9px 12px;
-    color: var(--text-primary);
-    font-size: 0.8rem;
+    background: var(--stone-50);
+    border: 1px solid var(--stone-200);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--stone-800);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
     outline: none;
 }
 
@@ -687,72 +824,153 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     padding: 16px;
-    background: #ffffff;
-    border-radius: 10px;
+    background: var(--stone-50);
+    border: 1px solid var(--stone-200);
+    border-radius: 8px;
     width: fit-content;
-    margin: 0 auto;
-}
-
-.qr-preview-box span {
-    font-size: 0.75rem;
-    color: #475569;
-    font-weight: 600;
+    margin: 4px auto 0;
 }
 
 /* ============================================================
    Responsive Medya Sorguları
    ============================================================ */
-@media (max-width: 1080px) {
+@media (max-width: 1100px) {
     .app-workspace {
-        grid-template-columns: 460px 1fr;
-    }
-    .header-controls {
-        display: none; /* Mobilde açılır menüye alınabilir veya gizlenebilir */
+        grid-template-columns: minmax(340px, 48%) 1px 1fr;
     }
 }
 
 @media (max-width: 860px) {
-    .app-workspace {
-        grid-template-columns: 1fr;
-        height: calc(100vh - 64px - 48px);
+    .header-controls {
+        display: none;
     }
-
-    .mobile-view-tabs {
-        display: flex;
-        height: 48px;
-        background: var(--bg-surface);
-        border-top: 1px solid var(--border-subtle);
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 40;
-    }
-
-    .mobile-tab-btn {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        font-weight: 600;
-        font-size: 0.85rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .mobile-tab-btn.active {
-        color: var(--accent-blue);
-        background: rgba(59, 130, 246, 0.08);
-        border-top: 2px solid var(--accent-blue);
-    }
-
-    .editor-panel.tab-hidden,
-    .preview-panel.tab-hidden {
+    .workspace-resizer {
         display: none !important;
     }
+    .app-workspace {
+        grid-template-columns: 1fr !important;
+        overflow-y: auto;
+    }
+    .sector-grid {
+        grid-template-columns: 1fr;
+    }
 }
+
+/* Spinner animasyonu */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.spinner-icon {
+    animation: spin 0.8s linear infinite;
+}
+
+/* ============================================================
+   PDF Dışa Aktarma Modalı Stilleri
+   ============================================================ */
+.pdf-export-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 620px) {
+    .pdf-export-options-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pdf-export-card {
+    background: #ffffff;
+    border: 1px solid var(--stone-200);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    position: relative;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.pdf-export-card:hover {
+    border-color: var(--stone-400);
+    box-shadow: var(--shadow-subtle);
+}
+
+.pdf-export-card.recommended {
+    border: 2px solid var(--stone-900);
+    background: #fafaf9;
+}
+
+.pdf-export-badge {
+    align-self: flex-start;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.pdf-export-badge.secondary {
+    background: var(--stone-100);
+    color: var(--stone-600);
+    border: 1px solid var(--stone-250);
+}
+
+.pdf-export-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--stone-900);
+}
+
+.pdf-export-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--stone-600);
+}
+
+.pdf-export-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.pdf-export-features .check-icon {
+    color: #10b981;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.pdf-export-features .warn-icon {
+    color: #ef4444;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.pdf-export-action {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.pdf-export-hint {
+    font-size: 10.5px;
+    color: var(--stone-500);
+    line-height: 1.35;
+    text-align: center;
+}
+
+
+

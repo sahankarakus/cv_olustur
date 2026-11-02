@@ -1,6 +1,6 @@
-# 🚀 CVZirve - Her Meslek İçin Ücretsiz & ATS Uyumlu CV Stüdyosu
+# 🚀 CVita - Her Meslek İçin Ücretsiz & ATS Uyumlu CV Stüdyosu
 
-**CVZirve**, sadece yazılımcılar için değil; **avukatlar, doktorlar, sağlık çalışanları, satış uzmanları, yeni mezunlar, finansçılar ve tasarımcılar** dahil her meslek grubunun saniyeler içinde ATS tarayıcılarına %100 uyumlu, profesyonel özgeçmişler hazırlamasını sağlayan **sıfır sunucu (zero-backend)** maliyetli modern bir web uygulamasıdır.
+**CVita**, sadece yazılımcılar için değil; **avukatlar, doktorlar, sağlık çalışanları, satış uzmanları, yeni mezunlar, finansçılar ve tasarımcılar** dahil her meslek grubunun saniyeler içinde ATS tarayıcılarına %100 uyumlu, profesyonel özgeçmişler hazırlamasını sağlayan **sıfır sunucu (zero-backend)** maliyetli modern bir web uygulamasıdır.
 
 ---
 

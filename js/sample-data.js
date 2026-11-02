@@ -10,14 +10,14 @@ const SECTOR_PROFILES = {
         name: "Yazılım & Bilişim",
         icon: "💻",
         personal: {
-            fullName: "Caner Öztürk",
+            fullName: "Adınız Soyadınız",
             title: "Kıdemli Tam Yığın Yazılım Geliştirici",
-            email: "caner.ozturk@ornek.com",
-            phone: "+90 (532) 555 01 23",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Kadıköy, İstanbul",
-            website: "canerozturk.dev",
-            linkedin: "linkedin.com/in/canerozturk",
-            github: "github.com/canerozturk",
+            website: "ornek.com",
+            linkedin: "linkedin.com/in/kullaniciadi",
+            github: "github.com/kullaniciadi",
             photo: ""
         },
         sectionTitles: {
@@ -68,7 +68,7 @@ const SECTOR_PROFILES = {
         skills: ["JavaScript / TypeScript", "React.js & Next.js", "Node.js", "Python", "PostgreSQL", "Docker", "AWS Cloud", "Git & CI/CD", "Mikroservisler"],
         languages: [{ name: "Türkçe", level: "Anadil" }, { name: "İngilizce", level: "C1 - Profesyonel Çalışma Dili" }],
         projects: [
-            { id: "prj-1", title: "DevPulse - Açık Kaynak Sistem İzleme", link: "github.com/caner/devpulse", description: "Mikroservisler için gecikme metriği toplayan açık kaynaklı gösterge paneli. 1.400+ GitHub yıldızı." }
+            { id: "prj-1", title: "DevPulse - Açık Kaynak Sistem İzleme", link: "github.com/kullaniciadi/proje", description: "Mikroservisler için gecikme metriği toplayan açık kaynaklı gösterge paneli. 1.400+ GitHub yıldızı." }
         ],
         certificates: [
             { id: "cert-1", title: "AWS Certified Solutions Architect – Associate", issuer: "Amazon Web Services", date: "2023" }
@@ -81,13 +81,13 @@ const SECTOR_PROFILES = {
         name: "Hukuk & Avukatlık",
         icon: "⚖️",
         personal: {
-            fullName: "Av. Zeynep Kaya",
+            fullName: "Adınız Soyadınız",
             title: "Ticaret & Şirketler Hukuku Avukatı",
-            email: "av.zeynepkaya@ornek.com",
-            phone: "+90 (533) 444 88 99",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Çankaya, Ankara",
-            website: "zeynepkayahukuk.com",
-            linkedin: "linkedin.com/in/av-zeynep-kaya",
+            website: "ornek.com",
+            linkedin: "linkedin.com/in/kullaniciadi",
             github: "", // Hukukta gerekmez, boş
             photo: ""
         },
@@ -153,13 +153,13 @@ const SECTOR_PROFILES = {
         name: "Sağlık & Tıp",
         icon: "🏥",
         personal: {
-            fullName: "Dr. Elif Yıldız",
+            fullName: "Adınız Soyadınız",
             title: "İç Hastalıkları (Dahiliye) Uzmanı",
-            email: "dr.elifyildiz@ornek.com",
-            phone: "+90 (542) 777 22 33",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Şişli, İstanbul",
-            website: "drelifyildiz.com",
-            linkedin: "linkedin.com/in/dr-elifyildiz",
+            website: "ornek.com",
+            linkedin: "linkedin.com/in/kullaniciadi",
             github: "",
             photo: ""
         },
@@ -235,13 +235,13 @@ const SECTOR_PROFILES = {
         name: "Satış & Pazarlama",
         icon: "💼",
         personal: {
-            fullName: "Murat Çetin",
+            fullName: "Adınız Soyadınız",
             title: "Kıdemli Satış & İş Geliştirme Yöneticisi",
-            email: "murat.cetin@ornek.com",
-            phone: "+90 (535) 333 44 55",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Ataşehir, İstanbul",
             website: "",
-            linkedin: "linkedin.com/in/murat-cetin-sales",
+            linkedin: "linkedin.com/in/kullaniciadi",
             github: "",
             photo: ""
         },
@@ -307,14 +307,14 @@ const SECTOR_PROFILES = {
         name: "Yeni Mezun & Öğrenci",
         icon: "🎓",
         personal: {
-            fullName: "Selin Aksoy",
+            fullName: "Adınız Soyadınız",
             title: "Endüstri Mühendisi / Yönetici Adayı (MT)",
-            email: "selin.aksoy@ornek.com",
-            phone: "+90 (555) 123 45 67",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Beşiktaş, İstanbul",
             website: "",
-            linkedin: "linkedin.com/in/selinaksoy",
-            github: "github.com/selinaksoy",
+            linkedin: "linkedin.com/in/kullaniciadi",
+            github: "github.com/kullaniciadi",
             photo: ""
         },
         sectionTitles: {
@@ -379,13 +379,13 @@ const SECTOR_PROFILES = {
         name: "Finans & Muhasebe",
         icon: "📊",
         personal: {
-            fullName: "Serdar Yılmaz",
+            fullName: "Adınız Soyadınız",
             title: "Kıdemli Finansal Analist / Mali Müşavir (SMMM)",
-            email: "serdar.yilmaz@ornek.com",
-            phone: "+90 (536) 888 11 22",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Levent, İstanbul",
             website: "",
-            linkedin: "linkedin.com/in/serdar-yilmaz-cpa",
+            linkedin: "linkedin.com/in/kullaniciadi",
             github: "",
             photo: ""
         },
@@ -451,14 +451,14 @@ const SECTOR_PROFILES = {
         name: "Tasarım & Mimarlık",
         icon: "🎨",
         personal: {
-            fullName: "Burak Eren",
+            fullName: "Adınız Soyadınız",
             title: "Kıdemli İç Mimar & Proje Yöneticisi",
-            email: "burak.eren@ornek.com",
-            phone: "+90 (531) 999 33 22",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
             location: "Beyoğlu, İstanbul",
-            website: "burakeren.design",
-            linkedin: "linkedin.com/in/burakeren-interior",
-            github: "behance.net/burakeren",
+            website: "ornek.com",
+            linkedin: "linkedin.com/in/kullaniciadi",
+            github: "behance.net/kullaniciadi",
             photo: ""
         },
         sectionTitles: {
@@ -509,7 +509,7 @@ const SECTOR_PROFILES = {
         skills: ["AutoCAD", "Autodesk Revit (BIM)", "3ds Max & Corona Renderer", "SketchUp & Enscape", "Adobe Photoshop / InDesign", "Detay & Şantiye Çizimi", "Metraj & Hakediş", "Malzeme & Aydınlatma"],
         languages: [{ name: "Türkçe", level: "Anadil" }, { name: "İngilizce", level: "B2 - İyi Seviye" }],
         projects: [
-            { id: "prj-1", title: "Karaköy Boutique Hotel (28 Oda - Restorasyon)", link: "behance.net/burakeren", description: "Tarihi eser tescilli yapının iç mimari renovasyonu ve anahtar teslim şantiye yönetimi." }
+            { id: "prj-1", title: "Karaköy Boutique Hotel (28 Oda - Restorasyon)", link: "behance.net/kullaniciadi/proje", description: "Tarihi eser tescilli yapının iç mimari renovasyonu ve anahtar teslim şantiye yönetimi." }
         ],
         certificates: [
             { id: "cert-1", title: "Autodesk Certified Professional: Revit for Architectural Design", issuer: "Autodesk", date: "2022" },
@@ -518,8 +518,8 @@ const SECTOR_PROFILES = {
     }
 };
 
-// Varsayılan ilk veri olarak yazılım/mühendislik profilini ata
-const SAMPLE_CV_DATA = SECTOR_PROFILES.tech;
+// Varsayılan ilk veri olarak Finans & Muhasebe (Serdar Yılmaz) profilini ata
+const SAMPLE_CV_DATA = SECTOR_PROFILES.finance;
 
 /**
  * Sektörlere Göre Güçlü Aksiyon Fiilleri ve Hazır İfadeler Kütüphanesi

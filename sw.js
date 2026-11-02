@@ -1,5 +1,5 @@
-// CVZirve Service Worker - Çevrimdışı Çalışma & Hızlı Önbellekleme
-const CACHE_NAME = 'cvzirve-cache-v3';
+// CVita Service Worker - Çevrimdışı Çalışma & Hızlı Önbellekleme
+const CACHE_NAME = 'cvita-cache-v8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -9,10 +9,12 @@ const ASSETS_TO_CACHE = [
   './css/templates.css',
   './css/gallery.css',
   './css/print.css',
+  './js/html2pdf.bundle.min.js',
   './js/sample-data.js',
   './js/templates.js',
   './js/export.js',
   './js/app.js',
+  './fonts/Roboto-Regular.ttf',
   './manifest.json'
 ];
 

@@ -105,6 +105,22 @@ const TemplateEngine = {
         return defaults[key] || key;
     },
 
+    cleanPhone(phone) {
+        if (!phone) return '';
+        return String(phone).replace(/[^0-9+]/g, '');
+    },
+
+    formatUrl(url, defaultDomain = '') {
+        if (!url) return '';
+        let trimmed = String(url).trim();
+        if (!trimmed) return '';
+        if (/^https?:\/\//i.test(trimmed)) return trimmed;
+        if (defaultDomain && !trimmed.toLowerCase().includes(defaultDomain)) {
+            return `https://${defaultDomain}/${trimmed.replace(/^@/, '')}`;
+        }
+        return `https://${trimmed}`;
+    },
+
     // SVG İkon Kütüphanesi
     getIcons() {
         return {
@@ -129,12 +145,12 @@ const TemplateEngine = {
 
         // Üst İletişim Bağlantıları
         const contactLinks = [];
-        if (p.phone) contactLinks.push(`<span class="ivy-contact-item">${icons.phone}<span>${this.escapeHtml(p.phone)}</span></span>`);
-        if (p.email) contactLinks.push(`<span class="ivy-contact-item">${icons.mail}<span>${this.escapeHtml(p.email)}</span></span>`);
+        if (p.phone) contactLinks.push(`<a href="tel:${this.cleanPhone(p.phone)}" class="ivy-contact-item cv-link">${icons.phone}<span>${this.escapeHtml(p.phone)}</span></a>`);
+        if (p.email) contactLinks.push(`<a href="mailto:${this.escapeHtml(p.email)}" class="ivy-contact-item cv-link">${icons.mail}<span>${this.escapeHtml(p.email)}</span></a>`);
         if (p.location) contactLinks.push(`<span class="ivy-contact-item">${icons.pin}<span>${this.escapeHtml(p.location)}</span></span>`);
-        if (p.linkedin) contactLinks.push(`<span class="ivy-contact-item">${icons.linkedin}<span>${this.escapeHtml(p.linkedin)}</span></span>`);
-        if (p.github) contactLinks.push(`<span class="ivy-contact-item">${icons.github}<span>${this.escapeHtml(p.github)}</span></span>`);
-        if (p.website) contactLinks.push(`<span class="ivy-contact-item">${icons.globe}<span>${this.escapeHtml(p.website)}</span></span>`);
+        if (p.linkedin) contactLinks.push(`<a href="${this.formatUrl(p.linkedin, 'linkedin.com/in')}" target="_blank" rel="noopener noreferrer" class="ivy-contact-item cv-link">${icons.linkedin}<span>${this.escapeHtml(p.linkedin)}</span></a>`);
+        if (p.github) contactLinks.push(`<a href="${this.formatUrl(p.github, 'github.com')}" target="_blank" rel="noopener noreferrer" class="ivy-contact-item cv-link">${icons.github}<span>${this.escapeHtml(p.github)}</span></a>`);
+        if (p.website) contactLinks.push(`<a href="${this.formatUrl(p.website)}" target="_blank" rel="noopener noreferrer" class="ivy-contact-item cv-link">${icons.globe}<span>${this.escapeHtml(p.website)}</span></a>`);
 
         // Bölüm Oluşturucu Fonksiyonlar
         const renderSection = {
@@ -212,7 +228,7 @@ const TemplateEngine = {
                                 <div class="ivy-entry">
                                     <div class="ivy-entry-header">
                                         <span class="ivy-entry-title">${this.escapeHtml(prj.title)}</span>
-                                        ${prj.link ? `<span class="ivy-entry-link">${this.escapeHtml(prj.link)}</span>` : ''}
+                                        ${prj.link ? `<a href="${this.formatUrl(prj.link)}" target="_blank" rel="noopener noreferrer" class="ivy-entry-link cv-link">${this.escapeHtml(prj.link)}</a>` : ''}
                                     </div>
                                     <div class="ivy-entry-body"><p>${this.escapeHtml(prj.description)}</p></div>
                                 </div>
@@ -284,12 +300,12 @@ const TemplateEngine = {
         ` : '';
 
         const contactItems = [];
-        if (p.email) contactItems.push(`<div class="modern-contact-item">${icons.mail}<span>${this.escapeHtml(p.email)}</span></div>`);
-        if (p.phone) contactItems.push(`<div class="modern-contact-item">${icons.phone}<span>${this.escapeHtml(p.phone)}</span></div>`);
+        if (p.email) contactItems.push(`<a href="mailto:${this.escapeHtml(p.email)}" class="modern-contact-item cv-link">${icons.mail}<span>${this.escapeHtml(p.email)}</span></a>`);
+        if (p.phone) contactItems.push(`<a href="tel:${this.cleanPhone(p.phone)}" class="modern-contact-item cv-link">${icons.phone}<span>${this.escapeHtml(p.phone)}</span></a>`);
         if (p.location) contactItems.push(`<div class="modern-contact-item">${icons.pin}<span>${this.escapeHtml(p.location)}</span></div>`);
-        if (p.website) contactItems.push(`<div class="modern-contact-item">${icons.globe}<span>${this.escapeHtml(p.website)}</span></div>`);
-        if (p.linkedin) contactItems.push(`<div class="modern-contact-item">${icons.linkedin}<span>${this.escapeHtml(p.linkedin)}</span></div>`);
-        if (p.github) contactItems.push(`<div class="modern-contact-item">${icons.github}<span>${this.escapeHtml(p.github)}</span></div>`);
+        if (p.website) contactItems.push(`<a href="${this.formatUrl(p.website)}" target="_blank" rel="noopener noreferrer" class="modern-contact-item cv-link">${icons.globe}<span>${this.escapeHtml(p.website)}</span></a>`);
+        if (p.linkedin) contactItems.push(`<a href="${this.formatUrl(p.linkedin, 'linkedin.com/in')}" target="_blank" rel="noopener noreferrer" class="modern-contact-item cv-link">${icons.linkedin}<span>${this.escapeHtml(p.linkedin)}</span></a>`);
+        if (p.github) contactItems.push(`<a href="${this.formatUrl(p.github, 'github.com')}" target="_blank" rel="noopener noreferrer" class="modern-contact-item cv-link">${icons.github}<span>${this.escapeHtml(p.github)}</span></a>`);
 
         const skills = data.skills || [];
         const skillsHtml = skills.length > 0 ? `
@@ -399,7 +415,7 @@ const TemplateEngine = {
                                 <div class="modern-project-card">
                                     <div class="modern-project-head">
                                         <h4 class="modern-project-title">${this.escapeHtml(prj.title)}</h4>
-                                        ${prj.link ? `<a href="${this.escapeHtml(prj.link)}" target="_blank" class="modern-project-link">${icons.external}</a>` : ''}
+                                        ${prj.link ? `<a href="${this.formatUrl(prj.link)}" target="_blank" rel="noopener noreferrer" class="modern-project-link cv-link" title="${this.escapeHtml(prj.link)}">${icons.external}</a>` : ''}
                                     </div>
                                     <p class="modern-project-desc">${this.escapeHtml(prj.description)}</p>
                                 </div>
@@ -446,12 +462,12 @@ const TemplateEngine = {
         const order = data.sectionOrder || ['summary', 'experience', 'education', 'skills', 'projects', 'certificates'];
 
         const contactBar = [];
-        if (p.email) contactBar.push(`<span>${this.escapeHtml(p.email)}</span>`);
-        if (p.phone) contactBar.push(`<span>${this.escapeHtml(p.phone)}</span>`);
+        if (p.email) contactBar.push(`<a href="mailto:${this.escapeHtml(p.email)}" class="cv-link"><span>${this.escapeHtml(p.email)}</span></a>`);
+        if (p.phone) contactBar.push(`<a href="tel:${this.cleanPhone(p.phone)}" class="cv-link"><span>${this.escapeHtml(p.phone)}</span></a>`);
         if (p.location) contactBar.push(`<span>${this.escapeHtml(p.location)}</span>`);
-        if (p.linkedin) contactBar.push(`<span>${this.escapeHtml(p.linkedin)}</span>`);
-        if (p.github) contactBar.push(`<span>${this.escapeHtml(p.github)}</span>`);
-        if (p.website) contactBar.push(`<span>${this.escapeHtml(p.website)}</span>`);
+        if (p.linkedin) contactBar.push(`<a href="${this.formatUrl(p.linkedin, 'linkedin.com/in')}" target="_blank" rel="noopener noreferrer" class="cv-link"><span>${this.escapeHtml(p.linkedin)}</span></a>`);
+        if (p.github) contactBar.push(`<a href="${this.formatUrl(p.github, 'github.com')}" target="_blank" rel="noopener noreferrer" class="cv-link"><span>${this.escapeHtml(p.github)}</span></a>`);
+        if (p.website) contactBar.push(`<a href="${this.formatUrl(p.website)}" target="_blank" rel="noopener noreferrer" class="cv-link"><span>${this.escapeHtml(p.website)}</span></a>`);
 
         const renderSection = {
             summary: () => {
@@ -539,7 +555,7 @@ const TemplateEngine = {
                                 <div class="ats-item">
                                     <div class="ats-item-header">
                                         <strong class="ats-role">${this.escapeHtml(prj.title)}</strong>
-                                        ${prj.link ? `<span class="ats-project-link">${this.escapeHtml(prj.link)}</span>` : ''}
+                                        ${prj.link ? `<a href="${this.formatUrl(prj.link)}" target="_blank" rel="noopener noreferrer" class="ats-project-link cv-link">${this.escapeHtml(prj.link)}</a>` : ''}
                                     </div>
                                     <p class="ats-project-desc">${this.escapeHtml(prj.description)}</p>
                                 </div>
@@ -586,10 +602,10 @@ const TemplateEngine = {
         const order = data.sectionOrder || ['summary', 'experience', 'education', 'skills', 'projects', 'certificates'];
 
         const contactDetails = [];
-        if (p.email) contactDetails.push(this.escapeHtml(p.email));
-        if (p.phone) contactDetails.push(this.escapeHtml(p.phone));
+        if (p.email) contactDetails.push(`<a href="mailto:${this.escapeHtml(p.email)}" class="cv-link">${this.escapeHtml(p.email)}</a>`);
+        if (p.phone) contactDetails.push(`<a href="tel:${this.cleanPhone(p.phone)}" class="cv-link">${this.escapeHtml(p.phone)}</a>`);
         if (p.location) contactDetails.push(this.escapeHtml(p.location));
-        if (p.website) contactDetails.push(this.escapeHtml(p.website));
+        if (p.website) contactDetails.push(`<a href="${this.formatUrl(p.website)}" target="_blank" rel="noopener noreferrer" class="cv-link">${this.escapeHtml(p.website)}</a>`);
 
         const renderSection = {
             summary: () => {
@@ -668,7 +684,7 @@ const TemplateEngine = {
                                 <div class="minimal-block">
                                     <div class="minimal-block-top">
                                         <span class="minimal-title">${this.escapeHtml(prj.title)}</span>
-                                        ${prj.link ? `<span class="minimal-meta">${this.escapeHtml(prj.link)}</span>` : ''}
+                                        ${prj.link ? `<a href="${this.formatUrl(prj.link)}" target="_blank" rel="noopener noreferrer" class="minimal-meta cv-link">${this.escapeHtml(prj.link)}</a>` : ''}
                                     </div>
                                     <p class="minimal-desc">${this.escapeHtml(prj.description)}</p>
                                 </div>

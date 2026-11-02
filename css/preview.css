@@ -1,9 +1,10 @@
 /* ============================================================
-   CVZirve - Sağ Canlı Önizleme & A4 Stüdyo Stilleri
+   CVZirve - Sağ Kalibre Edilmiş Canlı A4 Tuval Masası
+   (Craft Docs / Figma Masaüstü Estetiği)
    ============================================================ */
 
 .preview-panel {
-    background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%);
+    background: rgba(244, 244, 242, 0.92);
     position: relative;
     height: 100%;
     overflow: hidden;
@@ -11,32 +12,164 @@
     flex-direction: column;
 }
 
-/* Yüzen Önizleme Araç Çubuğu (Zoom Kontrolleri) */
-.preview-toolbar {
-    position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    border: 1px solid var(--glass-border);
-    border-radius: 999px;
-    padding: 6px 14px;
+/* A4 Masaüstü Üst Bilgi Çubuğu (Paper Desk Subheader Bar) */
+.preview-desk-header {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    padding: 16px 20px 6px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--stone-500);
+    flex-shrink: 0;
+}
+
+.preview-desk-left {
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: var(--shadow-lg);
-    z-index: 30;
+}
+
+.preview-desk-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--stone-400);
+}
+
+.preview-desk-title {
+    font-weight: 500;
+    color: var(--stone-700);
+}
+
+.preview-desk-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.preview-desk-meta {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--stone-400);
+}
+
+/* ============================================================
+   A4 Sahnesi & Pamuklu Kağıt Görünümü
+   ============================================================ */
+.preview-stage-container {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8px 20px 80px 20px;
+    cursor: grab;
+    position: relative;
     user-select: none;
 }
 
+.preview-stage-container.is-dragging {
+    cursor: grabbing !important;
+}
+
+.cv-paper-wrap {
+    position: relative;
+    margin: 0 auto;
+    flex-shrink: 0;
+    transition: width 0.15s ease-out, height 0.15s ease-out;
+}
+
+/* A4 Kağıt Öğesi (Standart 210mm x 297mm) */
+.cv-paper {
+    width: 210mm;
+    min-height: 297mm;
+    background-color: #ffffff;
+    color: var(--stone-900);
+    box-shadow: var(--shadow-paper);
+    border-radius: 2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+    transition: transform 0.15s ease-out;
+    overflow: hidden;
+    font-family: var(--cv-font);
+    box-sizing: border-box;
+    user-select: text;
+}
+
+/* Sayfa Sonu Kılavuz Çizgisi (1. Sayfa Sınırı) */
+.page-break-line {
+    position: absolute;
+    top: 297mm;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1.5px dashed rgba(163, 163, 155, 0.55);
+    z-index: 99;
+    pointer-events: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.page-break-line::after {
+    content: "1. Sayfa Sınırı (A4)";
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--stone-500);
+    background: var(--stone-50);
+    padding: 1px 6px;
+    border: 1px solid var(--stone-200);
+    border-radius: 3px;
+    transform: translateY(-50%);
+    margin-right: 12px;
+    font-weight: 500;
+}
+
+/* ============================================================
+   Yüzen Masaüstü Kontrolcüsü (Figma / Craft Docs Dock)
+   ============================================================ */
+.preview-toolbar {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    z-index: 30;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(229, 229, 225, 0.95);
+    box-shadow: var(--shadow-dock);
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--stone-700);
+    user-select: none;
+}
+
+.zoom-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .zoom-btn {
-    background: transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
     border: none;
-    color: var(--text-secondary);
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    background: transparent;
+    color: var(--stone-500);
+    font-size: 13px;
+    line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -45,131 +178,119 @@
 }
 
 .zoom-btn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.zoom-btn svg {
-    width: 15px;
-    height: 15px;
+    background: var(--stone-100);
+    color: var(--stone-900);
 }
 
 .zoom-level-text {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    min-width: 44px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 450;
+    color: var(--stone-700);
+    padding: 0 4px;
+    min-width: 34px;
     text-align: center;
 }
 
 .zoom-divider {
     width: 1px;
-    height: 16px;
-    background: var(--border-subtle);
+    height: 12px;
+    background: var(--stone-200);
 }
 
-.fit-btn {
-    background: transparent;
+/* Aralık Ön Ayar Seçici (Sıkı / Normal / Geniş) */
+.spacing-preset-group {
+    display: flex;
+    align-items: center;
+    background: var(--stone-100);
+    padding: 2px;
+    border-radius: 5px;
+    font-size: 11px;
+}
+
+.compactness-btn {
     border: none;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 999px;
+    background: transparent;
+    color: var(--stone-600);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 450;
+    font-family: inherit;
     cursor: pointer;
     transition: all var(--transition-fast);
 }
 
-.fit-btn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
+.compactness-btn:hover {
+    color: var(--stone-900);
 }
 
-/* Sayfa Sonu Bilgi Rozeti */
-.page-info-tag {
-    position: absolute;
-    top: 16px;
-    right: 20px;
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border-subtle);
-    padding: 5px 12px;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    z-index: 20;
+.compactness-btn.active {
+    background: #ffffff;
+    color: var(--stone-900);
+    font-weight: 500;
+    box-shadow: var(--shadow-2xs);
+}
+
+.layout-spacing-group .compactness-btn {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+.fit-icon-btn {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    color: var(--stone-500);
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    transition: all var(--transition-fast);
 }
 
-.page-info-tag span.badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent-emerald);
+.fit-icon-btn:hover {
+    background: var(--stone-100);
+    color: var(--stone-900);
+}
+
+.fit-icon-btn svg {
+    width: 14px;
+    height: 14px;
 }
 
 /* ============================================================
-   A4 Sahnesi & Kağıt Düzeni
+   html2pdf Doğrudan PDF Dışa Aktarma Optimizasyonu
    ============================================================ */
-.preview-stage-container {
-    flex: 1;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 24px 16px 80px 16px;
-    cursor: grab;
+.html2pdf__overlay {
+    background: transparent !important;
 }
 
-.preview-stage-container:active {
-    cursor: grabbing;
+.html2pdf__container {
+    position: relative !important;
+    width: 794px !important;
+    min-height: 1123px !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
 }
 
-.cv-paper-wrap {
-    transform-origin: top center;
-    transition: transform 0.15s ease-out;
+.html2pdf__container .cv-paper {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 794px !important;
+    min-height: 1123px !important;
+    height: auto !important;
+    transform: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    overflow: visible !important;
 }
 
-/* A4 Kağıt Öğesi (Standart 210mm x 297mm) */
-.cv-paper {
-    width: 210mm;
-    min-height: 297mm;
-    background-color: #ffffff;
-    color: #1e293b;
-    box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-    position: relative;
-    overflow: hidden;
-    font-family: var(--cv-font);
-    box-sizing: border-box;
+.html2pdf__container .page-break-line {
+    display: none !important;
 }
 
-/* Sayfa Sonu Kılavuz Çizgisi (1. Sayfa Bitiş Uyarısı) */
-.page-break-line {
-    position: absolute;
-    top: 297mm;
-    left: 0;
-    right: 0;
-    height: 1px;
-    border-bottom: 2px dashed rgba(239, 68, 68, 0.5);
-    z-index: 99;
-    pointer-events: none;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.page-break-line::after {
-    content: "1. Sayfa Sınırı (A4 Bitişi)";
-    font-family: var(--font-ui);
-    font-size: 10px;
-    color: #ef4444;
-    background: #ffffff;
-    padding: 2px 8px;
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    border-radius: 4px;
-    transform: translateY(-50%);
-    margin-right: 12px;
-    font-weight: 600;
-}

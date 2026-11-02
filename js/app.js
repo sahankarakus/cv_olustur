@@ -7,12 +7,12 @@
 const appState = {
     cvData: null,
     settings: {
-        template: 'ivy', // Şahan Karakuş & Ivy League ATS şablonu varsayılan
-        primaryColor: '#0f172a',
+        template: 'ats', // Kurumsal ATS şablonu varsayılan
+        primaryColor: '#191917',
         fontFamily: 'font-inter',
-        zoom: 0.70, // Rahat ve kompakt varsayılan boyut
+        zoom: 0.9, // Açılışta önizleme %90
         compactness: 'normal',
-        isAutoFit: true
+        isAutoFit: false
     }
 };
 
@@ -37,7 +37,12 @@ function initApp() {
     renderPreview();
     updateCompleteness();
     updateAtsScore();
-    autoFitPreview();
+    updateBackupTimestamp();
+    setupWorkspaceResizer();
+    setupPreviewPan();
+    // Açılışta önizleme %90 büyüklükte başlar
+    appState.settings.isAutoFit = false;
+    applyZoom(0.9);
 }
 
 /**
@@ -59,16 +64,17 @@ function updateFormVisibilityForTemplate() {
         photoNotice.style.display = supportsPhoto ? 'none' : 'flex';
     }
 
-    // Ivy League klasik ATS siyah-beyaz resmi standarttadır
-    if (colorGroup) {
+    // Ivy League klasik ATS siyah-beyaz resmi standarttadır (yalnızca renk bölümü devre dışı)
+    const colorSection = document.getElementById('colorSectionWrap');
+    if (colorSection) {
         if (tpl === 'ivy') {
-            colorGroup.style.opacity = '0.4';
-            colorGroup.style.pointerEvents = 'none';
-            colorGroup.title = 'Klasik ATS resmi siyah-beyaz formatındadır.';
+            colorSection.style.opacity = '0.4';
+            colorSection.style.pointerEvents = 'none';
+            colorSection.title = 'Klasik ATS resmi siyah-beyaz formatındadır.';
         } else {
-            colorGroup.style.opacity = '1';
-            colorGroup.style.pointerEvents = 'auto';
-            colorGroup.title = 'Vurgu Rengi';
+            colorSection.style.opacity = '1';
+            colorSection.style.pointerEvents = 'auto';
+            colorSection.title = 'Vurgu Rengi';
         }
     }
 
@@ -90,7 +96,7 @@ function updateFormVisibilityForTemplate() {
             'modern': 'Modern',
             'minimal': 'Minimalist'
         };
-        tplLabel.textContent = names[tpl] || 'Şablonlar';
+        tplLabel.textContent = names[tpl] || 'Kurumsal ATS';
     }
 }
 
@@ -116,12 +122,11 @@ function checkUrlSharedData() {
 
 function loadSavedData() {
     try {
-        const savedData = localStorage.getItem('cvzirve_data');
-        const savedSettings = localStorage.getItem('cvzirve_settings');
+        const savedData = localStorage.getItem('cvita_data') || localStorage.getItem('cvzirve_data');
+        const savedSettings = localStorage.getItem('cvita_settings') || localStorage.getItem('cvzirve_settings');
 
         if (savedData) {
             appState.cvData = JSON.parse(savedData);
-            // Eksik olabilecek alanları garantiye al
             if (!appState.cvData.sectionOrder) {
                 appState.cvData.sectionOrder = ["summary", "experience", "education", "skills", "projects", "certificates", "languages"];
             }
@@ -129,12 +134,34 @@ function loadSavedData() {
                 appState.cvData.sectionTitles = {};
             }
         } else {
-            // İlk açılışta zengin örnek veriyi yükle
             appState.cvData = JSON.parse(JSON.stringify(SAMPLE_CV_DATA));
         }
 
         if (savedSettings) {
             appState.settings = { ...appState.settings, ...JSON.parse(savedSettings) };
+        }
+
+        // Eski örnek isimler kayıtlıysa genel yer tutuculara güncelle
+        const legacySampleNames = [
+            "Caner Öztürk", "Serdar Yılmaz", "Av. Zeynep Kaya", "Dr. Elif Yıldız",
+            "Murat Çetin", "Selin Aksoy", "Burak Eren", "Barış Kaya", "Zeynep Arslan",
+            "Deniz Yılmaz", "Ece Tunç"
+        ];
+        if (appState.cvData && appState.cvData.personal && legacySampleNames.includes(appState.cvData.personal.fullName)) {
+            appState.cvData.personal.fullName = "Adınız Soyadınız";
+            appState.cvData.personal.phone = "0555 555 55 55";
+            appState.cvData.personal.email = "ornek@ornek.com";
+            if (appState.cvData.personal.website) appState.cvData.personal.website = "ornek.com";
+            if (appState.cvData.personal.linkedin) appState.cvData.personal.linkedin = "linkedin.com/in/kullaniciadi";
+            if (appState.cvData.personal.github) appState.cvData.personal.github = "github.com/kullaniciadi";
+            if (Array.isArray(appState.cvData.projects)) {
+                appState.cvData.projects.forEach(p => {
+                    if (p.link && (p.link.includes('caner') || p.link.includes('burakeren'))) {
+                        p.link = p.link.includes('github') ? 'github.com/kullaniciadi/proje' : 'behance.net/kullaniciadi/proje';
+                    }
+                });
+            }
+            saveData();
         }
     } catch (e) {
         console.error("Kayıtlı veri yükleme hatası:", e);
@@ -142,10 +169,27 @@ function loadSavedData() {
     }
 }
 
+function updateBackupTimestamp() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const label = document.getElementById('lastBackupLabel');
+    if (label) {
+        label.textContent = `Otomatik Yedekleme: ${hh}:${mm}`;
+    }
+}
+
 function saveData() {
     try {
-        localStorage.setItem('cvzirve_data', JSON.stringify(appState.cvData));
-        localStorage.setItem('cvzirve_settings', JSON.stringify(appState.settings));
+        localStorage.setItem('cvita_data', JSON.stringify(appState.cvData));
+        localStorage.setItem('cvita_settings', JSON.stringify(appState.settings));
+        updateBackupTimestamp();
+        const saveInd = document.getElementById('saveStatusIndicator');
+        if (saveInd) {
+            saveInd.classList.add('is-saving');
+            clearTimeout(window._saveIndTimer);
+            window._saveIndTimer = setTimeout(() => saveInd.classList.remove('is-saving'), 900);
+        }
     } catch (e) {
         console.warn("Veri kaydedilemedi:", e);
     }
@@ -160,7 +204,7 @@ function renderPreview() {
 
     // Şablon HTML'ini oluştur
     const html = TemplateEngine.render(appState.settings.template, appState.cvData);
-    paper.innerHTML = html;
+    paper.innerHTML = html + '<div class="page-break-line"></div>';
 
     // Renk değişkenini ve Font sınıfını kağıda uygula
     paper.style.setProperty('--cv-primary', appState.settings.primaryColor);
@@ -177,6 +221,9 @@ function renderPreview() {
     } else if (appState.settings.compactness === 'loose') {
         paper.classList.add('cv-compact-loose');
     }
+
+    // Kağıt ve sarıcı boyutlarını senkronize et
+    applyZoom(appState.settings.zoom);
 }
 
 function hexToRgba(hex, alpha) {
@@ -205,6 +252,19 @@ function populateFormFromData() {
     updatePhotoPreviewInEditor(p.photo);
     setVal('inputSummary', d.summary);
 
+    const sectorLabel = document.getElementById('currentSectorLabel');
+    if (sectorLabel && d.name) {
+        sectorLabel.textContent = d.name;
+    }
+
+    const lang = d.lang || 'tr';
+    const btnTR = document.getElementById('btnLangTR');
+    const btnEN = document.getElementById('btnLangEN');
+    if (btnTR && btnEN) {
+        btnTR.classList.toggle('active', lang === 'tr');
+        btnEN.classList.toggle('active', lang === 'en');
+    }
+
     renderExperienceEditorList();
     renderEducationEditorList();
     renderSkillsPills();
@@ -219,6 +279,13 @@ function populateFormFromData() {
 function setVal(id, val) {
     const el = document.getElementById(id);
     if (el) el.value = val || '';
+}
+
+function formatYearRange(start, end, current, lang = 'tr') {
+    const sYear = start ? start.split('-')[0] : '';
+    const eYear = current ? (lang === 'en' ? 'Present' : 'Günümüz') : (end ? end.split('-')[0] : '');
+    if (sYear && eYear) return `${sYear} – ${eYear}`;
+    return sYear || eYear || '';
 }
 
 // ==========================================
@@ -293,36 +360,43 @@ window.editSectionTitle = function(key, event) {
 // ==========================================
 
 // --- İŞ DENEYİMİ ---
-function renderExperienceEditorList() {
+function renderExperienceEditorList(expandFirst = false) {
     const container = document.getElementById('experienceList');
     if (!container) return;
     const items = appState.cvData.experience || [];
-    updateBadgeCount('expCountBadge', items.length);
+    const lang = appState.cvData.lang || 'tr';
+    updateBadgeCount('expCountBadge', `${items.length} Pozisyon`);
 
-    container.innerHTML = items.map((exp, index) => `
+    container.innerHTML = items.map((exp, index) => {
+        const yearRange = formatYearRange(exp.startDate, exp.endDate, exp.current, lang);
+        const isExpanded = (expandFirst && index === 0) || (!exp.role && !exp.company);
+        return `
         <div class="item-card" data-index="${index}">
             <div class="item-card-header" onclick="toggleCardBody(this)">
-                <div>
-                    <div class="item-card-title">${TemplateEngine.escapeHtml(exp.role || 'Yeni Pozisyon')}</div>
-                    <div class="item-card-sub">${TemplateEngine.escapeHtml(exp.company || 'Şirket/Kurum')}</div>
+                <div class="item-card-summary-line">
+                    <span class="item-card-title">${TemplateEngine.escapeHtml(exp.role || 'Yeni Pozisyon')}</span>
+                    <span class="item-card-sub">• ${TemplateEngine.escapeHtml(exp.company || 'Şirket/Kurum')}</span>
                 </div>
-                <div class="item-card-actions" onclick="event.stopPropagation()">
-                    <button type="button" class="btn-icon danger" onclick="removeExperience(${index})" title="Sil">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                    </button>
+                <div class="item-card-right">
+                    ${yearRange ? `<span class="item-card-date">${TemplateEngine.escapeHtml(yearRange)}</span>` : ''}
+                    <div class="item-card-actions" onclick="event.stopPropagation()">
+                        <button type="button" class="btn-icon danger" onclick="removeExperience(${index})" title="Sil">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="item-card-body">
+            <div class="item-card-body" style="display: ${isExpanded ? 'flex' : 'none'};">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Pozisyon / Ünvan</label>
                         <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(exp.role || '')}" 
-                               oninput="updateExperienceField(${index}, 'role', this.value)" placeholder="Örn: Kıdemli Avukat / Yazılım Mühendisi / Doktor">
+                               oninput="updateExperienceField(${index}, 'role', this.value)" placeholder="Örn: Kıdemli Finansal Kontrolör">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Şirket / Kurum / Büro</label>
+                        <label class="form-label">Şirket / Kurum</label>
                         <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(exp.company || '')}" 
-                               oninput="updateExperienceField(${index}, 'company', this.value)" placeholder="Örn: ABC Holding / Florence Nightingale / Baro">
+                               oninput="updateExperienceField(${index}, 'company', this.value)" placeholder="Örn: Kolektif Holding A.Ş.">
                     </div>
                 </div>
                 <div class="form-row">
@@ -347,15 +421,10 @@ function renderExperienceEditorList() {
                 <div class="form-group">
                     <label class="form-label">Konum</label>
                     <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(exp.location || '')}" 
-                           oninput="updateExperienceField(${index}, 'location', this.value)" placeholder="Örn: İstanbul / Ankara">
+                           oninput="updateExperienceField(${index}, 'location', this.value)" placeholder="Örn: İstanbul">
                 </div>
                 <div class="form-group">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label class="form-label">Görevler & Ölçülebilir Başarılar</label>
-                        <button type="button" class="btn btn-ghost" style="padding: 2px 8px; font-size: 0.72rem;" onclick="openActionVerbsModal(${index})">
-                            💡 Hazır Cümleler
-                        </button>
-                    </div>
+                    <label class="form-label">Görevler &amp; Ölçülebilir Başarılar</label>
                     <textarea class="form-textarea" rows="4" 
                               id="expDesc_${index}"
                               oninput="updateExperienceField(${index}, 'description', this.value)" 
@@ -363,7 +432,8 @@ function renderExperienceEditorList() {
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 window.addExperience = function() {
@@ -378,7 +448,7 @@ window.addExperience = function() {
         current: false,
         description: ''
     });
-    renderExperienceEditorList();
+    renderExperienceEditorList(true);
     renderPreview();
     saveData();
     updateCompleteness();
@@ -397,6 +467,14 @@ window.removeExperience = function(index) {
 window.updateExperienceField = function(index, field, value) {
     if (appState.cvData.experience[index]) {
         appState.cvData.experience[index][field] = value;
+        const card = document.querySelector(`#experienceList .item-card[data-index="${index}"]`);
+        if (card) {
+            const exp = appState.cvData.experience[index];
+            const titleEl = card.querySelector('.item-card-title');
+            const subEl = card.querySelector('.item-card-sub');
+            if (titleEl) titleEl.textContent = exp.role || 'Yeni Pozisyon';
+            if (subEl) subEl.textContent = `• ${exp.company || 'Şirket/Kurum'}`;
+        }
         renderPreview();
         saveData();
         updateCompleteness();
@@ -408,55 +486,63 @@ window.toggleExpCurrent = function(index, isCurrent) {
     if (appState.cvData.experience[index]) {
         appState.cvData.experience[index].current = isCurrent;
         if (isCurrent) appState.cvData.experience[index].endDate = '';
-        renderExperienceEditorList();
+        renderExperienceEditorList(true);
         renderPreview();
         saveData();
     }
 };
 
 // --- EĞİTİM ---
-function renderEducationEditorList() {
+function renderEducationEditorList(expandFirst = false) {
     const container = document.getElementById('educationList');
     if (!container) return;
     const items = appState.cvData.education || [];
-    updateBadgeCount('eduCountBadge', items.length);
+    const lang = appState.cvData.lang || 'tr';
+    updateBadgeCount('eduCountBadge', `${items.length} Okul`);
 
-    container.innerHTML = items.map((edu, index) => `
+    container.innerHTML = items.map((edu, index) => {
+        const yearRange = formatYearRange(edu.startDate, edu.endDate, false, lang);
+        const isExpanded = (expandFirst && index === 0) || (!edu.school && !edu.field);
+        const subText = [edu.field, edu.degree].filter(Boolean).join(' ') + (edu.gpa ? ` (${edu.gpa})` : '');
+        return `
         <div class="item-card" data-index="${index}">
             <div class="item-card-header" onclick="toggleCardBody(this)">
-                <div>
-                    <div class="item-card-title">${TemplateEngine.escapeHtml(edu.school || 'Yeni Okul/Üniversite')}</div>
-                    <div class="item-card-sub">${TemplateEngine.escapeHtml(edu.field || 'Bölüm')}</div>
+                <div class="item-card-summary-line">
+                    <span class="item-card-title">${TemplateEngine.escapeHtml(edu.school || 'Yeni Okul/Üniversite')}</span>
+                    <span class="item-card-sub">— ${TemplateEngine.escapeHtml(subText || 'Bölüm')}</span>
                 </div>
-                <div class="item-card-actions" onclick="event.stopPropagation()">
-                    <button type="button" class="btn-icon danger" onclick="removeEducation(${index})" title="Sil">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                    </button>
+                <div class="item-card-right">
+                    ${yearRange ? `<span class="item-card-date">${TemplateEngine.escapeHtml(yearRange)}</span>` : ''}
+                    <div class="item-card-actions" onclick="event.stopPropagation()">
+                        <button type="button" class="btn-icon danger" onclick="removeEducation(${index})" title="Sil">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="item-card-body">
+            <div class="item-card-body" style="display: ${isExpanded ? 'flex' : 'none'};">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Okul / Üniversite / Fakülte</label>
                         <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(edu.school || '')}" 
-                               oninput="updateEducationField(${index}, 'school', this.value)" placeholder="Örn: İstanbul Üniversitesi">
+                               oninput="updateEducationField(${index}, 'school', this.value)" placeholder="Örn: Marmara Üniversitesi">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Derece</label>
                         <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(edu.degree || '')}" 
-                               oninput="updateEducationField(${index}, 'degree', this.value)" placeholder="Örn: Lisans / Yüksek Lisans / Tıpta Uzmanlık">
+                               oninput="updateEducationField(${index}, 'degree', this.value)" placeholder="Örn: Lisans / Yüksek Lisans">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Bölüm / Alan</label>
                         <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(edu.field || '')}" 
-                               oninput="updateEducationField(${index}, 'field', this.value)" placeholder="Örn: Hukuk / Tıp / İşletme">
+                               oninput="updateEducationField(${index}, 'field', this.value)" placeholder="Örn: İşletme">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Not Ortalaması (GNO)</label>
-                        <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(edu.gpa || '')}" 
-                               oninput="updateEducationField(${index}, 'gpa', this.value)" placeholder="Örn: 3.65 / 4.00">
+                        <input type="text" class="form-input font-mono" value="${TemplateEngine.escapeHtml(edu.gpa || '')}" 
+                               oninput="updateEducationField(${index}, 'gpa', this.value)" placeholder="Örn: 3.60 / 4.00">
                     </div>
                 </div>
                 <div class="form-row">
@@ -474,11 +560,12 @@ function renderEducationEditorList() {
                 <div class="form-group">
                     <label class="form-label">Ek Açıklama / Bitirme Tezi</label>
                     <input type="text" class="form-input" value="${TemplateEngine.escapeHtml(edu.description || '')}" 
-                           oninput="updateEducationField(${index}, 'description', this.value)" placeholder="Örn: Onur derecesi, Tez başlığı...">
+                           oninput="updateEducationField(${index}, 'description', this.value)" placeholder="Örn: Finans ve Muhasebe Anabilim Dalı Odaklı.">
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 window.addEducation = function() {
@@ -493,7 +580,7 @@ window.addEducation = function() {
         gpa: '',
         description: ''
     });
-    renderEducationEditorList();
+    renderEducationEditorList(true);
     renderPreview();
     saveData();
     updateCompleteness();
@@ -512,6 +599,15 @@ window.removeEducation = function(index) {
 window.updateEducationField = function(index, field, value) {
     if (appState.cvData.education[index]) {
         appState.cvData.education[index][field] = value;
+        const card = document.querySelector(`#educationList .item-card[data-index="${index}"]`);
+        if (card) {
+            const edu = appState.cvData.education[index];
+            const titleEl = card.querySelector('.item-card-title');
+            const subEl = card.querySelector('.item-card-sub');
+            const subText = [edu.field, edu.degree].filter(Boolean).join(' ') + (edu.gpa ? ` (${edu.gpa})` : '');
+            if (titleEl) titleEl.textContent = edu.school || 'Yeni Okul/Üniversite';
+            if (subEl) subEl.textContent = `— ${subText || 'Bölüm'}`;
+        }
         renderPreview();
         saveData();
         updateCompleteness();
@@ -523,7 +619,7 @@ function renderSkillsPills() {
     const container = document.getElementById('skillsPills');
     if (!container) return;
     const skills = appState.cvData.skills || [];
-    updateBadgeCount('skillsCountBadge', skills.length);
+    updateBadgeCount('skillsCountBadge', `${skills.length} Yetkinlik`);
 
     container.innerHTML = skills.map((skill, index) => `
         <span class="skill-pill">
@@ -823,7 +919,11 @@ window.removePhoto = function() {
 // 7 Sektör Değiştirici (Multi-Sector Profiles)
 // ==========================================
 window.openSectorModal = function() {
-    const modal = document.getElementById('sectorModal');
+    openModal('sectorModal');
+};
+
+window.openModal = function(modalId) {
+    const modal = document.getElementById(modalId);
     if (modal) modal.classList.add('active');
 };
 
@@ -851,9 +951,7 @@ window.selectSector = function(sectorKey) {
 // ==========================================
 // TR ⟷ EN Dil Değiştirici
 // ==========================================
-window.toggleLanguage = function() {
-    const current = appState.cvData.lang || 'tr';
-    const next = (current === 'tr') ? 'en' : 'tr';
+window.setLanguage = function(next) {
     appState.cvData.lang = next;
 
     // Başlık etiketlerini güncelle
@@ -863,15 +961,25 @@ window.toggleLanguage = function() {
         appState.cvData.sectionTitles[k] = defs[k];
     });
 
-    const langBtn = document.getElementById('btnLangToggle');
-    if (langBtn) {
-        langBtn.textContent = (next === 'en') ? 'EN 🇬🇧' : 'TR 🇹🇷';
+    const btnTR = document.getElementById('btnLangTR');
+    const btnEN = document.getElementById('btnLangEN');
+    if (btnTR && btnEN) {
+        btnTR.classList.toggle('active', next === 'tr');
+        btnEN.classList.toggle('active', next === 'en');
     }
 
     updateSectionTitleBadges();
+    renderExperienceEditorList();
+    renderEducationEditorList();
     renderPreview();
     saveData();
     showToast(`CV dili ${next.toUpperCase()} olarak ayarlandı.`, "info");
+};
+
+window.toggleLanguage = function() {
+    const current = appState.cvData.lang || 'tr';
+    const next = (current === 'tr') ? 'en' : 'tr';
+    window.setLanguage(next);
 };
 
 // ==========================================
@@ -885,7 +993,7 @@ window.setCompactness = function(level) {
 
     renderPreview();
     saveData();
-    showToast(`Aralık boyutu: ${level === 'tight' ? 'Kompakt (Sığdır)' : (level === 'loose' ? 'Ferah' : 'Normal')}`, "info");
+    showToast(`Aralık boyutu: ${level === 'tight' ? 'Sıkı' : (level === 'loose' ? 'Geniş' : 'Normal')}`, "info");
 };
 
 // ==========================================
@@ -921,7 +1029,7 @@ function updateAtsScore() {
     }
 
     // 3. Güçlü Aksiyon Fiilleri (25 Puan)
-    const actionWords = ["yönet", "optimize", "geliştir", "tasarla", "uygula", "analiz", "koordine", "artır", "azalt", "lider", "planla", "entegre"];
+    const actionWords = ["yönet", "optimize", "geliştir", "tasarla", "uygula", "analiz", "koordine", "artır", "azalt", "lider", "planla", "entegre", "hazırla", "sağla", "tamamla", "tespit"];
     const foundVerbs = actionWords.filter(w => allDesc.toLowerCase().includes(w));
     if (foundVerbs.length >= 2) {
         score += 25;
@@ -946,12 +1054,14 @@ function updateAtsScore() {
         checks.push({ passed: false, text: "ATS anahtar kelimeleri için en az 4 yetkinlik/araç eklemeniz tavsiye edilir." });
     }
 
-    // Arayüzü güncelle
-    const badge = document.getElementById('atsScoreBadge');
-    if (badge) {
-        badge.textContent = `ATS: ${score}/100`;
-        badge.style.borderColor = (score >= 80) ? 'var(--accent-emerald)' : ((score >= 50) ? '#f59e0b' : 'var(--accent-rose)');
-        badge.style.color = (score >= 80) ? 'var(--accent-emerald)' : ((score >= 50) ? '#f59e0b' : 'var(--accent-rose)');
+    // Header ATS Skor Barını ve Yüzdesini Güncelle
+    const barFill = document.getElementById('atsScoreBarFill');
+    const scoreVal = document.getElementById('atsScoreValue');
+    if (barFill) {
+        barFill.style.width = `${score}%`;
+    }
+    if (scoreVal) {
+        scoreVal.textContent = `${score}%`;
     }
 
     // Modal içerik güncelle
@@ -1053,26 +1163,280 @@ window.copyShareUrl = function() {
 };
 
 // ==========================================
-// Şablon Galerisi Modalı (Görsel Seçim)
+// Şablon Galerisi Modalı (Sabit Tasarım & Görsel Göstergeli)
 // ==========================================
+const SHOWCASE_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="suitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="120" fill="url(#bgGrad)"/>
+  <path d="M40 240 C40 185 75 160 120 160 C165 160 200 185 200 240 Z" fill="url(#suitGrad)"/>
+  <polygon points="120,200 96,160 144,160" fill="#ffffff"/>
+  <polygon points="120,210 113,170 127,170" fill="#0284c7"/>
+  <rect x="105" y="132" width="30" height="34" rx="4" fill="#fed7aa"/>
+  <ellipse cx="120" cy="98" rx="42" ry="46" fill="#fed7aa"/>
+  <path d="M78 96 C76 58 92 42 120 42 C148 42 164 58 162 96 C156 74 144 64 120 64 C96 64 84 74 78 96 Z" fill="#334155"/>
+  <circle cx="106" cy="98" r="3.5" fill="#1e293b"/>
+  <circle cx="134" cy="98" r="3.5" fill="#1e293b"/>
+  <path d="M99 90 Q106 87 113 90" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M127 90 Q134 87 141 90" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M112 118 Q120 125 128 118" stroke="#ea580c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+</svg>
+`);
+
+// Şablon seçim ekranında kullanıcının girdiği veriden bağımsız, sabit örnek tasarımlar
+const STATIC_TEMPLATE_SHOWCASE = {
+    ivy: {
+        personal: {
+            fullName: "Adınız Soyadınız",
+            title: "Kıdemli Yazılım Mühendisi",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
+            location: "Kadıköy, İstanbul",
+            linkedin: "linkedin.com/in/kullaniciadi",
+            github: "github.com/kullaniciadi",
+            photo: ""
+        },
+        sectionTitles: {
+            summary: "Kariyer Hedefi",
+            experience: "İş Deneyimi",
+            education: "Eğitim Bilgileri",
+            skills: "Teknik Yetkinlikler",
+            projects: "Önemli Projeler"
+        },
+        sectionOrder: ["summary", "experience", "education", "skills"],
+        summary: "7 yılı aşkın deneyime sahip tam yığın yazılım mühendisi. Yüksek ölçekli bulut mimarileri, mikroservisler ve yüksek hacimli finans sistemleri geliştirmede uzmanlaşmıştır.",
+        experience: [
+            {
+                role: "Kıdemli Yazılım Mimarı",
+                company: "FinTech Çözümleri A.Ş.",
+                location: "İstanbul",
+                startDate: "2022-01",
+                endDate: "",
+                current: true,
+                description: "• Günlük 5M+ işlem hacmine sahip mikroservis mimarisini tasarladı ve %99.99 çalışma süresi sağladı.\n• Dağıtık Redis önbellekleme ile API yanıt sürelerini %42 oranında düşürdü."
+            },
+            {
+                role: "Yazılım Geliştirici",
+                company: "Global Veri Sistemleri",
+                location: "İstanbul",
+                startDate: "2018-09",
+                endDate: "2021-12",
+                current: false,
+                description: "• Docker ve Kubernetes konteyner orkestrasyonu ile CI/CD boru hattını modernize etti.\n• 12 mikroservisin test kapsamını %88'e çıkardı."
+            }
+        ],
+        education: [
+            {
+                school: "Boğaziçi Üniversitesi",
+                degree: "Lisans - Bilgisayar Mühendisliği (GNO: 3.82)",
+                startDate: "2014-09",
+                endDate: "2018-06",
+                current: false
+            }
+        ],
+        skills: ["Go", "Node.js", "TypeScript", "PostgreSQL", "Docker", "Kubernetes", "AWS Cloud", "Redis"]
+    },
+    ats: {
+        personal: {
+            fullName: "Adınız Soyadınız",
+            title: "Kurumsal Finans & Bütçe Müdürü (SMMM)",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
+            location: "Levent, İstanbul",
+            linkedin: "linkedin.com/in/kullaniciadi",
+            photo: ""
+        },
+        sectionTitles: {
+            summary: "Profesyonel Özet",
+            experience: "İş Deneyimi",
+            education: "Eğitim Bilgileri",
+            skills: "Yetkinlikler & Sertifikalar"
+        },
+        sectionOrder: ["summary", "experience", "education", "skills"],
+        summary: "10+ yıllık kurumsal finansman, IFRS bütçeleme, varyans analizi ve SAP FI/CO entegrasyonu tecrübesine sahip SMMM ruhsatlı finans lideri.",
+        experience: [
+            {
+                role: "Finans & Bütçe Müdürü",
+                company: "Holding Uluslararası Yatırım",
+                location: "İstanbul",
+                startDate: "2020-03",
+                endDate: "",
+                current: true,
+                description: "• 250M ₺ yıllık konsolide bütçeyi yönetti; maliyet optimizasyon projeleriyle operasyonel giderleri %18 azalttı.\n• IFRS ve SPK uyumlu üç aylık konsolide finansal tabloların hazırlanmasını yönetti."
+            },
+            {
+                role: "Kıdemli Finansal Kontrolör",
+                company: "Denetim & Danışmanlık A.Ş.",
+                location: "İstanbul",
+                startDate: "2015-10",
+                endDate: "2020-02",
+                current: false,
+                description: "• 15 farklı iştirakin nakit akış tahmin ve hazine modellerini kurdu.\n• ERP dönüşüm projesinde finans modülü liderliğini üstlendi."
+            }
+        ],
+        education: [
+            {
+                school: "İstanbul Üniversitesi",
+                degree: "İktisat Fakültesi - İşletme (İngilizce)",
+                startDate: "2011-09",
+                endDate: "2015-06",
+                current: false
+            }
+        ],
+        skills: ["IFRS", "SAP FI/CO", "Bütçe & Planlama", "Mali Tablolar Analizi", "SMMM Ruhsatı", "Nakit Akış"]
+    },
+    modern: {
+        personal: {
+            fullName: "Adınız Soyadınız",
+            title: "Kreatif Direktör & UI/UX Lideri",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
+            location: "Şişli, İstanbul",
+            website: "ornek.com",
+            linkedin: "linkedin.com/in/kullaniciadi",
+            photo: SHOWCASE_AVATAR_SVG
+        },
+        sectionTitles: {
+            summary: "Kariyer Hedefi",
+            experience: "Deneyim",
+            education: "Eğitim",
+            skills: "Uzmanlıklar",
+            projects: "Portfolyo"
+        },
+        sectionOrder: ["summary", "experience", "education", "projects"],
+        summary: "Kullanıcı odaklı dijital ürünler, tasarım sistemleri ve ödüllü mobil arayüzler tasarlayan, 8 yıllık deneyime sahip Kreatif Tasarım Lideri.",
+        experience: [
+            {
+                role: "Lead Ürün Tasarımcısı",
+                company: "Studio Nebula",
+                location: "İstanbul",
+                startDate: "2021-04",
+                endDate: "",
+                current: true,
+                description: "• 1M+ aktif kullanıcıya sahip mobil uygulamanın uçtan uca UI/UX tasarımına liderlik etti; dönüşümü %34 artırdı.\n• 40+ bileşenli şirket içi Design System kütüphanesini Figma'da inşa etti."
+            },
+            {
+                role: "Kıdemli UI/UX Tasarımcısı",
+                company: "Dijital Sanatlar Ajansı",
+                location: "İstanbul",
+                startDate: "2017-09",
+                endDate: "2021-03",
+                current: false,
+                description: "• Finans ve telekomünikasyon markaları için responsive web ve mobil tasarımlar üretti."
+            }
+        ],
+        education: [
+            {
+                school: "Mimar Sinan Güzel Sanatlar Üni.",
+                degree: "Grafik Tasarım (Lisans)",
+                startDate: "2013-09",
+                endDate: "2017-06",
+                current: false
+            }
+        ],
+        skills: ["Figma", "Design Systems", "UI/UX", "Prototipleme", "Kullanıcı Araştırması", "Design Tokens"],
+        languages: [
+            { name: "Türkçe", level: "Ana Dil" },
+            { name: "İngilizce", level: "C1 - İleri Düzey" }
+        ],
+        certificates: [
+            { name: "Nielsen Norman UX Master", issuer: "NN/g", date: "2022" }
+        ]
+    },
+    minimal: {
+        personal: {
+            fullName: "Adınız Soyadınız",
+            title: "Mimar & Tasarım Danışmanı",
+            email: "ornek@ornek.com",
+            phone: "0555 555 55 55",
+            location: "Beyoğlu, İstanbul",
+            website: "ornek.com",
+            photo: ""
+        },
+        sectionTitles: {
+            summary: "Biyografi",
+            experience: "Mesleki Deneyim",
+            education: "Eğitim",
+            skills: "Uzmanlık Alanları"
+        },
+        sectionOrder: ["summary", "experience", "education", "skills"],
+        summary: "Modern mimarlık mirası, kentsel dönüşüm teorileri ve editoryal tasarım alanında 7 yıllık uluslararası proje ve araştırma tecrübesine sahip mimar.",
+        experience: [
+            {
+                role: "Kıdemli Proje Mimarı",
+                company: "Mimarlık ve Kent Tasarım",
+                location: "İstanbul",
+                startDate: "2020-05",
+                endDate: "",
+                current: true,
+                description: "• 3 uluslararası bienal ve sergi pavyonunun mimari tasarım ve uygulama koordinasyonunu yürüttü.\n• 120+ sayfalık araştırma ve yayın monografisinin editoryal tasarımını yönetti."
+            },
+            {
+                role: "Mimar",
+                company: "Kolektif Tasarım Atölyesi",
+                location: "İstanbul",
+                startDate: "2017-02",
+                endDate: "2020-04",
+                current: false,
+                description: "• Konut ve karma kullanım projelerinde konsept tasarım ve 3D modelleme çizimleri hazırladı."
+            }
+        ],
+        education: [
+            {
+                school: "İstanbul Teknik Üniversitesi",
+                degree: "Mimarlık Fakültesi (Lisans)",
+                startDate: "2012-09",
+                endDate: "2016-06",
+                current: false
+            }
+        ],
+        skills: ["Küratöryel Tasarım", "Editoryal Mizanpaj", "Revit & AutoCAD", "Rhino & V-Ray", "Tipografi"]
+    }
+};
+
 const TEMPLATE_META = [
     {
-        id: 'ivy', name: 'Klasik ATS (Ivy League)',
-        badges: [['★ En Çok Önerilen', true], ['%100 ATS'], ['Fotoğrafsız']],
+        id: 'ivy',
+        name: 'Klasik ATS (Ivy League)',
+        supportsPhoto: false,
+        defaultFont: 'font-eb-garamond',
+        defaultColor: '#191917',
+        badges: [['★ En Çok Önerilen', 'highlight'], ['%100 ATS'], ['Fotoğrafsız']],
         desc: 'Hukuk, finans, sağlık, mühendislik ve resmi kurumlar için altın standart.'
     },
     {
-        id: 'ats', name: 'Kurumsal ATS',
+        id: 'ats',
+        name: 'Kurumsal ATS',
+        supportsPhoto: false,
+        defaultFont: 'font-inter',
+        defaultColor: '#1e3a8a',
         badges: [['Tek Sütun'], ['Resmi Format'], ['Fotoğrafsız']],
         desc: 'Ortalanmış başlık, renkli bölüm çizgileri ve taranabilir kurumsal düzen.'
     },
     {
-        id: 'modern', name: 'Modern (İki Sütunlu)',
-        badges: [['Fotoğraflı', true], ['Renkli Kenar Çubuğu']],
-        desc: 'Teknoloji, pazarlama ve kreatif başvurular için görsel vurgulu tasarım.'
+        id: 'modern',
+        name: 'Modern (İki Sütunlu)',
+        supportsPhoto: true,
+        defaultFont: 'font-outfit',
+        defaultColor: '#0284c7',
+        badges: [['📸 Fotoğraf Destekli', 'photo'], ['İki Sütunlu'], ['Kreatif & Tech']],
+        desc: 'Profil fotoğrafı eklenebilen, sol kenar çubuğunda görsel ve yetkinlikleri öne çıkaran tasarım.'
     },
     {
-        id: 'minimal', name: 'Minimalist Editoryal',
+        id: 'minimal',
+        name: 'Minimalist Editoryal',
+        supportsPhoto: false,
+        defaultFont: 'font-playfair',
+        defaultColor: '#191917',
         badges: [['Zarif Tipografi'], ['Ferah Alanlar'], ['Fotoğrafsız']],
         desc: 'Mimarlık, tasarım, akademi ve danışmanlık için sade, şık düzen.'
     }
@@ -1082,28 +1446,37 @@ function buildTemplateGallery() {
     const grid = document.getElementById('templatesGalleryGrid');
     if (!grid) return;
 
-    // Kullanıcının doldurduğu veri varsa onu, yoksa örnek veriyi göster
-    const d = appState.cvData;
-    const hasOwnData = d && d.personal && d.personal.fullName && (d.experience || []).length > 0;
-    const previewData = hasOwnData ? d : SECTOR_PROFILES.tech;
+    // Sabit, değişmeyen tasarım verisi kullanılır
+    grid.innerHTML = TEMPLATE_META.map(t => {
+        const showcaseData = STATIC_TEMPLATE_SHOWCASE[t.id] || STATIC_TEMPLATE_SHOWCASE.ivy;
+        const fontClass = t.defaultFont || 'font-inter';
+        const primaryColor = t.defaultColor || '#191917';
+        const primaryLight = hexToRgba(primaryColor, 0.12);
+        const isActive = appState.settings.template === t.id;
 
-    grid.innerHTML = TEMPLATE_META.map(t => `
-        <div class="template-card ${appState.settings.template === t.id ? 'active' : ''}" data-template="${t.id}" onclick="selectTemplateFromModal('${t.id}')">
-            <div class="template-live-preview">
-                <div class="template-live-inner ${appState.settings.fontFamily}" data-tpl="${t.id}"
-                     style="--cv-primary:${appState.settings.primaryColor}; --cv-primary-light:${hexToRgba(appState.settings.primaryColor, 0.12)};">
-                    ${TemplateEngine.render(t.id, previewData)}
+        return `
+            <div class="template-card ${isActive ? 'active' : ''}" data-template="${t.id}" onclick="selectTemplateFromModal('${t.id}')">
+                <div class="template-live-preview">
+                    <span class="template-photo-pill ${t.supportsPhoto ? 'photo-yes' : 'photo-no'}">
+                        ${t.supportsPhoto 
+                            ? `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> 📸 Fotoğraf Destekli` 
+                            : `📄 Fotoğrafsız (ATS)`}
+                    </span>
+                    <div class="template-live-inner ${fontClass}" data-tpl="${t.id}"
+                         style="--cv-primary:${primaryColor}; --cv-primary-light:${primaryLight};">
+                        ${TemplateEngine.render(t.id, showcaseData)}
+                    </div>
+                </div>
+                <div class="template-card-info">
+                    <div class="template-card-title">${t.name}</div>
+                    <div class="template-badges-row">
+                        ${t.badges.map(b => `<span class="template-badge ${b[1] === 'highlight' ? 'highlight' : (b[1] === 'photo' ? 'badge-photo' : '')}">${b[0]}</span>`).join('')}
+                    </div>
+                    <p class="template-desc">${t.desc}</p>
                 </div>
             </div>
-            <div class="template-card-info">
-                <div class="template-card-title">${t.name}</div>
-                <div class="template-badges-row">
-                    ${t.badges.map(b => `<span class="template-badge ${b[1] ? 'highlight' : ''}">${b[0]}</span>`).join('')}
-                </div>
-                <p class="template-desc">${t.desc}</p>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     scaleTemplatePreviews();
 }
@@ -1139,7 +1512,6 @@ function buildColorPopover() {
     if (!wrap) return;
     wrap.innerHTML = COLOR_GROUPS.map(g => `
         <div class="color-group">
-            <div class="color-group-label">${g.label}</div>
             <div class="color-swatch-row">
                 ${g.colors.map(c => `<span class="color-swatch" data-color="${c[0]}" title="${c[1]}" style="background:${c[0]}"></span>`).join('')}
             </div>
@@ -1207,7 +1579,14 @@ function setupDismissBehavior() {
         if (pop) pop.classList.remove('open');
     });
 
-    window.addEventListener('resize', scaleTemplatePreviews);
+    window.addEventListener('resize', () => {
+        scaleTemplatePreviews();
+        if (appState.settings.isAutoFit) {
+            autoFitPreview();
+        } else {
+            applyZoom(appState.settings.zoom);
+        }
+    });
 }
 
 window.selectTemplateFromModal = function(templateId) {
@@ -1231,7 +1610,7 @@ window.selectTemplateFromModal = function(templateId) {
 // ==========================================
 window.changeZoom = function(delta) {
     let newZoom = Math.round((appState.settings.zoom + delta) * 100) / 100;
-    newZoom = Math.min(Math.max(newZoom, 0.4), 1.3);
+    newZoom = Math.min(Math.max(newZoom, 0.4), 1.4);
     appState.settings.isAutoFit = false;
     applyZoom(newZoom);
 };
@@ -1239,52 +1618,98 @@ window.changeZoom = function(delta) {
 window.resetZoom = function() {
     appState.settings.isAutoFit = false;
     applyZoom(0.70); // Rahat varsayılan
+    const stage = document.getElementById('previewStage');
+    if (stage) {
+        stage.scrollTop = 0;
+        stage.scrollLeft = 0;
+    }
 };
 
 window.autoFitPreview = function() {
     const stage = document.getElementById('previewStage');
+    const paper = document.getElementById('cvPaper');
     if (!stage) return;
     const availableWidth = stage.clientWidth - 48;
-    const a4PixelWidth = 794;
+    const availableHeight = stage.clientHeight - 110;
+    const paperWidth = (paper && paper.offsetWidth) || 794;
+    const paperHeight = (paper && paper.offsetHeight) || 1123;
     
-    if (availableWidth > 0) {
-        // Önizlemenin ekranı çok boğmaması için maksimum 0.72 ölçek sınırı
-        let fitScale = Math.min(Math.max(availableWidth / a4PixelWidth, 0.45), 0.72);
+    if (availableWidth > 0 && availableHeight > 0) {
+        const scaleW = availableWidth / paperWidth;
+        const scaleH = availableHeight / paperHeight;
+        
+        let fitScale = Math.min(scaleW, scaleH);
+        fitScale = Math.min(Math.max(fitScale, 0.40), 1.1);
         fitScale = Math.round(fitScale * 100) / 100;
         appState.settings.isAutoFit = true;
         applyZoom(fitScale);
+
+        stage.scrollTop = 0;
+        stage.scrollLeft = 0;
     }
 };
 
 function applyZoom(scale) {
-    appState.settings.zoom = scale;
+    if (typeof scale === 'number' && !isNaN(scale)) {
+        appState.settings.zoom = scale;
+    } else {
+        scale = appState.settings.zoom || 0.70;
+    }
+
     const wrap = document.getElementById('cvPaperWrap');
+    const paper = document.getElementById('cvPaper');
     const zoomText = document.getElementById('zoomLevelText');
-    if (wrap) wrap.style.transform = `scale(${scale})`;
     if (zoomText) zoomText.textContent = `${Math.round(scale * 100)}%`;
+
+    if (paper && wrap) {
+        paper.style.transform = `scale(${scale})`;
+        paper.style.transformOrigin = 'top left';
+
+        const unscaledWidth = paper.offsetWidth || 794;
+        const unscaledHeight = paper.offsetHeight || 1123;
+
+        wrap.style.width = `${Math.round(unscaledWidth * scale)}px`;
+        wrap.style.height = `${Math.round(unscaledHeight * scale)}px`;
+    }
 }
 
 // ==========================================
-// Doluluk Oranı
+// Doluluk Oranı & Karakter Sayacı
 // ==========================================
 function updateCompleteness() {
     const d = appState.cvData;
+    if (!d) return;
     let score = 0;
     let total = 6;
 
     if (d.personal && d.personal.fullName && d.personal.email) score++;
     if (d.personal && d.personal.phone && d.personal.location) score++;
-    if (d.summary && d.summary.length > 30) score++;
+    if (d.summary && d.summary.length > 20) score++;
     if (d.experience && d.experience.length > 0) score++;
     if (d.education && d.education.length > 0) score++;
     if (d.skills && d.skills.length >= 3) score++;
 
-    const percent = Math.round((score / total) * 100);
-    const fillEl = document.getElementById('progressFill');
     const badgeEl = document.getElementById('completionBadge');
+    if (badgeEl) {
+        badgeEl.textContent = `${score}/${total} Bölüm Hazır`;
+    }
 
-    if (fillEl) fillEl.style.width = `${percent}%`;
-    if (badgeEl) badgeEl.textContent = `%${percent} Dolu`;
+    // Toplam karakter sayısını hesapla
+    const p = d.personal || {};
+    const expText = (d.experience || []).map(e => `${e.role || ''} ${e.company || ''} ${e.description || ''}`).join(' ');
+    const eduText = (d.education || []).map(e => `${e.school || ''} ${e.field || ''} ${e.description || ''}`).join(' ');
+    const prjText = (d.projects || []).map(pr => `${pr.title || ''} ${pr.description || ''}`).join(' ');
+    const certText = (d.certificates || []).map(c => `${c.title || ''} ${c.issuer || ''}`).join(' ');
+    const skillsText = (d.skills || []).join(' ');
+    const totalChars = [p.fullName, p.title, p.email, p.phone, p.location, d.summary, expText, eduText, prjText, certText, skillsText]
+        .filter(Boolean)
+        .join('')
+        .length;
+
+    const charLabel = document.getElementById('charCountLabel');
+    if (charLabel) {
+        charLabel.textContent = `Karakter sayısı: ${totalChars.toLocaleString('tr-TR')}`;
+    }
 }
 
 // ==========================================
@@ -1314,18 +1739,46 @@ window.clearAllData = function() {
     }
 };
 
-window.exportCvJson = function() {
-    const ok = Exporter.downloadJson(appState.cvData);
-    if (ok) showToast("Yedek JSON dosyası indirildi.", "success");
-};
-
-window.triggerJsonUpload = function() {
-    const input = document.getElementById('jsonFileInput');
-    if (input) input.click();
-};
-
 window.printCv = function() {
     Exporter.printToPdf();
+};
+
+window.confirmClearCv = function() {
+    if (!confirm("Tüm CV alanlarını silip sıfırdan boş bir taslak başlatmak istediğinize emin misiniz?\n\nBu işlem geri alınamaz.")) {
+        return;
+    }
+
+    appState.cvData = {
+        name: "Boş CV",
+        lang: (appState.cvData && appState.cvData.lang) || 'tr',
+        personal: {
+            fullName: "",
+            title: "",
+            email: "",
+            phone: "",
+            location: "",
+            website: "",
+            linkedin: "",
+            github: "",
+            photo: ""
+        },
+        summary: "",
+        experience: [],
+        education: [],
+        skills: [],
+        projects: [],
+        certificates: [],
+        languages: [],
+        sectionOrder: ["summary", "experience", "education", "skills", "projects", "certificates", "languages"],
+        sectionTitles: {}
+    };
+
+    populateFormFromData();
+    renderPreview();
+    updateCompleteness();
+    updateAtsScore();
+    saveData();
+    showToast("Tüm form alanları temizlendi.", "info");
 };
 
 // ==========================================
@@ -1411,29 +1864,18 @@ function setupEventListeners() {
         });
     }
 
-    // JSON İçe Aktarma
-    const jsonFileInput = document.getElementById('jsonFileInput');
-    if (jsonFileInput) {
-        jsonFileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            try {
-                const importedData = await Exporter.readJsonFile(file);
-                if (importedData && (importedData.personal || importedData.experience)) {
-                    appState.cvData = importedData;
-                    populateFormFromData();
-                    renderPreview();
-                    saveData();
-                    updateCompleteness();
-                    updateAtsScore();
-                    showToast("CV yedeği başarıyla yüklendi!", "success");
-                }
-            } catch (err) {
-                showToast(err.message, "warn");
-            }
-            jsonFileInput.value = '';
-        });
-    }
+    // Modalleri dışarı tıklayarak veya ESC ile kapatma
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target && e.target.classList && e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('active');
+        }
+    });
 
     window.addEventListener('resize', () => {
         if (appState.settings.isAutoFit) autoFitPreview();
@@ -1502,4 +1944,125 @@ function showToast(message, type = 'info') {
         toast.style.transition = 'all 0.3s ease';
         setTimeout(() => toast.remove(), 300);
     }, 3200);
+}
+
+// ==========================================
+// Çalışma Alanı Panel Genişliği Ayırıcı (Resizer)
+// ==========================================
+function setupWorkspaceResizer() {
+    const resizer = document.getElementById('workspaceResizer');
+    const workspace = document.querySelector('.app-workspace');
+    if (!resizer || !workspace) return;
+
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        isResizing = true;
+        resizer.classList.add('is-resizing');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        const minW = 340;
+        const maxW = window.innerWidth - 360;
+        const newW = Math.max(minW, Math.min(e.clientX, maxW));
+        workspace.style.gridTemplateColumns = `${newW}px 1px 1fr`;
+        try {
+            localStorage.setItem('cv_editor_width', newW);
+        } catch (err) {}
+        applyZoom(appState.settings.zoom);
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            resizer.classList.remove('is-resizing');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            if (appState.settings.isAutoFit) {
+                autoFitPreview();
+            } else {
+                applyZoom(appState.settings.zoom);
+            }
+        }
+    });
+
+    resizer.addEventListener('dblclick', () => {
+        // Çift tıklamada 45% editör, 55% önizleme oranına sıfırla
+        workspace.style.gridTemplateColumns = 'minmax(360px, 45%) 1px 1fr';
+        try {
+            localStorage.removeItem('cv_editor_width');
+        } catch (err) {}
+        if (appState.settings.isAutoFit) {
+            autoFitPreview();
+        } else {
+            applyZoom(appState.settings.zoom);
+        }
+    });
+
+    // İlk açılışta 45% editör / 55% önizleme oranını sağla
+    try {
+        const layoutVersion = localStorage.getItem('cv_layout_ratio_version');
+        if (layoutVersion !== '55_45') {
+            // Eski 63/37 oranından kalan genişliği temizle ve yeni 55/45 oranını varsayılan yap
+            localStorage.removeItem('cv_editor_width');
+            localStorage.setItem('cv_layout_ratio_version', '55_45');
+        }
+        const savedW = localStorage.getItem('cv_editor_width');
+        if (savedW) {
+            const w = parseInt(savedW, 10);
+            if (w >= 340 && w <= window.innerWidth - 360) {
+                workspace.style.gridTemplateColumns = `${w}px 1px 1fr`;
+            }
+        } else {
+            workspace.style.gridTemplateColumns = 'minmax(360px, 45%) 1px 1fr';
+        }
+    } catch (err) {}
+}
+
+// ==========================================
+// Önizleme Sahnesi Sürükle & Kaydır (Smooth Pan)
+// ==========================================
+function setupPreviewPan() {
+    const stage = document.getElementById('previewStage');
+    if (!stage) return;
+    let isDown = false;
+    let startX = 0, startY = 0;
+    let scrollLeft = 0, scrollTop = 0;
+    let hasMoved = false;
+
+    stage.addEventListener('mousedown', (e) => {
+        if (e.button !== 0 || e.target.closest('button, input, select, textarea, a, .preview-toolbar, .page-info-tag')) return;
+        isDown = true;
+        hasMoved = false;
+        startX = e.pageX;
+        startY = e.pageY;
+        scrollLeft = stage.scrollLeft;
+        scrollTop = stage.scrollTop;
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isDown) {
+            isDown = false;
+            stage.classList.remove('is-dragging');
+        }
+    });
+
+    stage.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const dx = e.pageX - startX;
+        const dy = e.pageY - startY;
+        if (!hasMoved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+            hasMoved = true;
+            stage.classList.add('is-dragging');
+        }
+        if (hasMoved) {
+            e.preventDefault();
+            stage.scrollLeft = scrollLeft - dx;
+            stage.scrollTop = scrollTop - dy;
+        }
+    });
 }
